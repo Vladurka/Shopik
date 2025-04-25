@@ -15,6 +15,15 @@ app.use(cors());
 app.use(express.json());
 app.use(clerkMiddleware());
 
+app.use((error, req, res, next) => {
+  res.status(500).json({
+    message:
+      process.env.NODE_ENV === "production"
+        ? error.message
+        : "Internal server error",
+  });
+});
+
 app.listen(port, () => {
   console.log("Server is running on port " + port);
   connectDB();

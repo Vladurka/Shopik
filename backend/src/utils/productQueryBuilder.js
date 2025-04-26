@@ -12,7 +12,7 @@ export const buildProductQuery = (query) => {
     minRating,
     sort,
     page = 1,
-    limit = 10,
+    limit = 9,
   } = query;
 
   const filter = {};

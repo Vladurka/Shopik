@@ -7,6 +7,8 @@ export const buildProductQuery = (query) => {
     search,
     size,
     color,
+    gender,
+    tag,
     minRating,
     sort,
     page = 1,
@@ -30,6 +32,8 @@ export const buildProductQuery = (query) => {
   }
   if (size) filter.size = size;
   if (color) filter.color = color;
+  if (gender) filter.gender = gender;
+  if (tag) filter.tag = tag;
   if (minRating) filter.rating = { $gte: Number(minRating) };
 
   const sortOption = {};

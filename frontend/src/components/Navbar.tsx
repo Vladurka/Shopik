@@ -1,11 +1,7 @@
-import {
-  SignedOut,
-  SignInButton,
-  SignedIn,
-  SignOutButton,
-} from "@clerk/clerk-react";
+import { SignedOut, SignedIn, SignOutButton } from "@clerk/clerk-react";
 import { Heart, ShoppingCart } from "lucide-react";
 import { Link } from "react-router-dom";
+import { SignInOAuthButton } from "./SignInOAuthButton";
 
 export const Navbar = () => {
   return (
@@ -16,11 +12,7 @@ export const Navbar = () => {
         </Link>
 
         <SignedOut>
-          <SignInButton mode="modal">
-            <button className="px-4 py-2 bg-zinc-500 text-white font-semibold rounded-lg hover:bg-zinc-600 transition-colors duration-300">
-              Sign in
-            </button>
-          </SignInButton>
+          <SignInOAuthButton />
         </SignedOut>
 
         <SignedIn>

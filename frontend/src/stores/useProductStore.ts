@@ -4,20 +4,38 @@ import { create } from "zustand";
 
 export type FilterParams = Record<string, string | string[]>;
 
+interface SelectedFilters {
+  genders: string[];
+  sizes: string[];
+  colors: string[];
+  brands: string[];
+  categories: string[];
+}
+
 export interface ProductStore {
   products: Product[];
   filters: Filters;
+  selectedFilters: SelectedFilters;
   currentProduct: Product | null;
   isLoading: boolean;
   error: string | null;
   fetchProducts: (filtersParams?: FilterParams) => Promise<void>;
   fetchProduct: (id: string) => Promise<void>;
   fetchFilters: () => Promise<void>;
+  setSelectedFilters: (filters: Partial<SelectedFilters>) => void;
+  resetSelectedFilters: () => void;
 }
 
 export const useProductStore = create<ProductStore>((set) => ({
   products: [],
   filters: { genders: [], sizes: [], colors: [], brands: [], categories: [] },
+  selectedFilters: {
+    genders: [],
+    sizes: [],
+    colors: [],
+    brands: [],
+    categories: [],
+  },
   currentProduct: null,
   isLoading: false,
   error: null,
@@ -62,4 +80,23 @@ export const useProductStore = create<ProductStore>((set) => ({
       set({ error: error.message });
     }
   },
+
+  setSelectedFilters: (filters) =>
+    set((state) => ({
+      selectedFilters: {
+        ...state.selectedFilters,
+        ...filters,
+      },
+    })),
+
+  resetSelectedFilters: () =>
+    set({
+      selectedFilters: {
+        genders: [],
+        sizes: [],
+        colors: [],
+        brands: [],
+        categories: [],
+      },
+    }),
 }));

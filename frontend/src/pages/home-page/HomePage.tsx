@@ -1,4 +1,5 @@
 import { Navbar } from "@/components/Navbar";
+import { Link } from "react-router-dom";
 
 export const HomePage = () => {
   const images = [
@@ -22,15 +23,18 @@ export const HomePage = () => {
             <img
               src={item.bg}
               alt={item.text}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
             />
 
             <div className="absolute inset-0 bg-black/60"></div>
 
             <div className="absolute inset-0 flex items-center justify-center">
-              <span className="text-white text-2xl font-bold transform transition-transform duration-300 hover:scale-110 cursor-pointer">
+              <Link
+                to={`/products?tag=${item.text.replace(/\s+/g, "")}`}
+                className="text-white text-2xl font-bold transform transition-transform duration-300 group-hover:scale-110"
+              >
                 {item.text}
-              </span>
+              </Link>
             </div>
           </div>
         ))}

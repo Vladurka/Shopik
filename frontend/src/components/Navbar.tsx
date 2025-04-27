@@ -24,26 +24,12 @@ export const Navbar = () => {
         </SignedIn>
       </div>
 
-      <div className="flex space-x-6">
-        <Link
-          to="/products"
-          className="font-bold text-xl text-white transform transition-transform duration-300 hover:scale-110 hover:text-blue-300 cursor-pointer"
-        >
-          New & Featured
-        </Link>
-        <Link
-          to="/products"
-          className="font-bold text-xl text-white transform transition-transform duration-300 hover:scale-110 hover:text-blue-300 cursor-pointer"
-        >
-          Men
-        </Link>
-        <Link
-          to="/products"
-          className="font-bold text-xl text-white transform transition-transform duration-300 hover:scale-110 hover:text-blue-300 cursor-pointer"
-        >
-          Women
-        </Link>
-      </div>
+      <Link
+        to="/products"
+        className="font-bold text-xl text-white transform transition-transform duration-300 hover:scale-110 hover:text-blue-300 cursor-pointer"
+      >
+        Discover The Shop!
+      </Link>
 
       <div className="flex items-center space-x-4">
         <div className="relative">

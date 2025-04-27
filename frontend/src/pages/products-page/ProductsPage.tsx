@@ -3,17 +3,25 @@ import { Navbar } from "../../components/Navbar";
 import { useProductStore } from "@/stores/useProductStore";
 import { Product } from "@/types";
 import { Filters } from "@/components/Filters";
+import { useSearchParams } from "react-router-dom";
 
 export const ProductsPage = () => {
-  const { products, fetchProducts, isLoading } = useProductStore();
+  const { products, fetchProducts } = useProductStore();
+  const [searchParams] = useSearchParams();
 
   useEffect(() => {
-    fetchProducts();
-  }, [fetchProducts]);
+    const queryParams: Record<string, string[]> = {};
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+    searchParams.forEach((value, key) => {
+      if (queryParams[key]) {
+        queryParams[key].push(value);
+      } else {
+        queryParams[key] = [value];
+      }
+    });
+
+    fetchProducts(queryParams);
+  }, [fetchProducts, searchParams]);
 
   return (
     <>

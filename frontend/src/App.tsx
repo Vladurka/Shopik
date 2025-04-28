@@ -3,12 +3,14 @@ import { HomePage } from "./pages/home-page/HomePage";
 import { ProductsPage } from "./pages/products-page/ProductsPage";
 import { AuthenticateWithRedirectCallback } from "@clerk/clerk-react";
 import { AuthCallbackPage } from "./pages/auth-callback-page/AuthCallbackPage";
+import { DetailsPage } from "./pages/details-page/DetailsPage";
 
 export default function App() {
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
       <Route path="/products" element={<ProductsPage />} />
+      <Route path="/product/:id" element={<DetailsPage />} />
       <Route
         path="/sso-callback"
         element={

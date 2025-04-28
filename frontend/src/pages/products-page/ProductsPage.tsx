@@ -3,7 +3,7 @@ import { Navbar } from "../../components/Navbar";
 import { useProductStore } from "@/stores/useProductStore";
 import { Product } from "@/types";
 import { Filters } from "@/components/Filters";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 
 export const ProductsPage = () => {
   const { products, fetchProducts } = useProductStore();
@@ -45,9 +45,13 @@ export const ProductsPage = () => {
                 <h2 className="text-xl font-bold mb-2">{product.name}</h2>
                 <p className="text-white mb-2">{product.description}</p>
                 <p className="text-lg font-semibold mb-2">${product.price}</p>
-                <button className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition">
+
+                <Link
+                  to={`/product/${product._id}`}
+                  className="inline-block bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition"
+                >
                   View Details
-                </button>
+                </Link>
               </div>
             </div>
           ))}

@@ -21,7 +21,7 @@ export interface ProductStore {
   error: string | null;
   fetchProducts: (filtersParams?: FilterParams) => Promise<void>;
   fetchProduct: (id: string) => Promise<void>;
-  fetchFilters: () => Promise<void>;
+  fetchFilters: (filtersParams?: FilterParams) => Promise<void>;
   setSelectedFilters: (filters: Partial<SelectedFilters>) => void;
   resetSelectedFilters: () => void;
 }
@@ -72,9 +72,17 @@ export const useProductStore = create<ProductStore>((set) => ({
     }
   },
 
-  fetchFilters: async () => {
+  fetchFilters: async (filtersParams) => {
     try {
-      const { data } = await axiosInstance.get("/products/filters");
+      const query = filtersParams
+        ? `?${new URLSearchParams(
+            Object.entries(filtersParams).flatMap(([key, value]) =>
+              Array.isArray(value) ? value.map((v) => [key, v]) : [[key, value]]
+            )
+          ).toString()}`
+        : "";
+
+      const { data } = await axiosInstance.get(`/products/filters${query}`);
       set({ filters: data.filters });
     } catch (error: any) {
       set({ error: error.message });

@@ -17,8 +17,26 @@ export const Filters = () => {
   );
 
   useEffect(() => {
-    fetchFilters();
-  }, [fetchFilters]);
+    const paramsObj = Array.from(searchParams.entries()).reduce(
+      (acc, [key, value]) => {
+        acc[key] = acc[key] ? [...acc[key], value] : [value];
+        return acc;
+      },
+      {} as Record<string, string[]>
+    );
+
+    const selectedFilters = {
+      genders: paramsObj.gender || [],
+      sizes: paramsObj.size || [],
+      colors: paramsObj.color || [],
+      brands: paramsObj.brand || [],
+      categories: paramsObj.category || [],
+    };
+
+    setSelectedFilters(selectedFilters);
+    fetchProducts(paramsObj);
+    fetchFilters(paramsObj);
+  }, [fetchFilters, fetchProducts, setSelectedFilters, searchParams]);
 
   const handleFilterChange = (
     type: keyof typeof selectedFilters,
@@ -42,6 +60,7 @@ export const Filters = () => {
 
     setSelectedFilters({ [type]: updatedValues });
     fetchProducts(queryParams);
+    fetchFilters(queryParams);
 
     const newSearchParams = new URLSearchParams(searchParams);
 

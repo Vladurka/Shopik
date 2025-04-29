@@ -4,25 +4,17 @@ import { create } from "zustand";
 
 export type FilterParams = Record<string, string | string[]>;
 
-interface SelectedFilters {
-  genders: string[];
-  sizes: string[];
-  colors: string[];
-  brands: string[];
-  categories: string[];
-}
-
 export interface ProductStore {
   products: Product[];
   filters: Filters;
-  selectedFilters: SelectedFilters;
+  selectedFilters: Filters;
   currentProduct: Product | null;
   isLoading: boolean;
   error: string | null;
   fetchProducts: (filtersParams?: FilterParams) => Promise<void>;
   fetchProduct: (id: string) => Promise<void>;
   fetchFilters: (filtersParams?: FilterParams) => Promise<void>;
-  setSelectedFilters: (filters: Partial<SelectedFilters>) => void;
+  setSelectedFilters: (filters: Partial<Filters>) => void;
   resetSelectedFilters: () => void;
 }
 

@@ -15,7 +15,7 @@ router.use(requireAdmin);
 router.get("/", checkAdmin);
 
 router.post("/products", createProduct);
-router.get("/products/:id", updateProduct);
 router.get("/products/filters", deleteProduct);
+router.get("/products/:id", updateProduct);
 
 export default router;

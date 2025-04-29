@@ -11,8 +11,13 @@ const reviewSchema = new mongoose.Schema(
       ref: "Product",
       required: true,
     },
+    sender: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
   },
   { timestamps: true }
 );
 
-export const Song = mongoose.model("Review", reviewSchema);
+export const Review = mongoose.model("Review", reviewSchema);

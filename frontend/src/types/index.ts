@@ -12,7 +12,7 @@ export interface Product {
   tag?: string;
   quantity: number;
   rating?: number;
-  reviews?: string[];
+  reviews?: ReviewOutput[];
 }
 
 export interface Filters {
@@ -21,4 +21,24 @@ export interface Filters {
   colors: string[];
   brands: string[];
   categories: string[];
+}
+
+export interface ReviewOutput {
+  _id: string;
+  message: string;
+  productId: string;
+  sender: User;
+}
+
+export interface ReviewInput {
+  message: string;
+  productId: string;
+  senderId: string;
+}
+
+export interface User {
+  _id: string;
+  fullName: string;
+  imageUrl: string;
+  clerkId: string;
 }

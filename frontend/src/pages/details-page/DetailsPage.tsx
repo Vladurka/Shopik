@@ -45,7 +45,9 @@ export const DetailsPage = () => {
       productId: currentProduct._id,
       senderId: user.id,
     });
+
     setMessage("");
+    await fetchProduct(currentProduct._id);
   };
 
   const {

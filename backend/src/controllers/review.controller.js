@@ -6,8 +6,6 @@ export const addReview = async (req, res, next) => {
   try {
     const { message, productId, senderId } = req.body;
 
-    console.log(senderId);
-
     const user = await User.findOne({ clerkId: senderId });
 
     if (!user) return res.status(404).json({ error: "User not found" });

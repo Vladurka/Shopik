@@ -26,7 +26,6 @@ export interface Filters {
 export interface ReviewOutput {
   _id: string;
   message: string;
-  productId: string;
   sender: User;
 }
 

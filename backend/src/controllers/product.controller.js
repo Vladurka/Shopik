@@ -3,9 +3,7 @@ import { buildProductQuery } from "../utils/productQueryBuilder.js";
 
 export const getProducts = async (req, res, next) => {
   try {
-    const { filter, sortOption, skip, limit, page } = buildProductQuery(
-      req.query
-    );
+    const { filter, sortOption, skip, limit } = buildProductQuery(req.query);
 
     const products = await Product.find(filter)
       .sort(sortOption)
@@ -22,6 +20,7 @@ export const getProductById = async (req, res, next) => {
   try {
     const product = await Product.findById(req.params.id).populate({
       path: "reviews",
+      options: { sort: { createdAt: -1 } },
       populate: {
         path: "sender",
         model: "User",

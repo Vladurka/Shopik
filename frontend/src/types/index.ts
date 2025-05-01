@@ -41,3 +41,13 @@ export interface User {
   imageUrl: string;
   clerkId: string;
 }
+
+export interface CartItem {
+  product: Product;
+  quantity: number;
+}
+
+export interface Cart {
+  id: string;
+  items: CartItem[];
+}

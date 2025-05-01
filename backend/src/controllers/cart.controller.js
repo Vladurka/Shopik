@@ -33,6 +33,27 @@ export const addToCart = async (req, res) => {
   }
 };
 
+export const isAdded = async (req, res) => {
+  try {
+    const { id, productId } = req.params;
+    const cartKey = `cart:${id}`;
+    const cartRaw = await redis.get(cartKey);
+
+    if (!cartRaw) {
+      return res.status(200).json({ isAdded: false });
+    }
+
+    const cart = JSON.parse(cartRaw);
+    const exists = cart.some(
+      (item) => item.product._id.toString() === productId
+    );
+
+    return res.status(200).json({ isAdded: exists });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 export const getCart = async (req, res) => {
   try {
     const { id } = req.params;

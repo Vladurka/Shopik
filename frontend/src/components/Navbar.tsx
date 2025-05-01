@@ -1,19 +1,22 @@
-import { SignedOut, SignedIn, SignOutButton } from "@clerk/clerk-react";
-import { Heart, ShoppingCart } from "lucide-react";
+import {
+  SignedOut,
+  SignedIn,
+  SignOutButton,
+  useAuth,
+} from "@clerk/clerk-react";
+import { ShoppingCart } from "lucide-react";
 import { Link } from "react-router-dom";
 import { SignInOAuthButton } from "./SignInOAuthButton";
 
 export const Navbar = () => {
+  const { isSignedIn } = useAuth();
+
   return (
     <nav className="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-6 bg-zinc-900 shadow-md h-25">
       <div className="flex items-center">
         <Link to="/">
           <img src="/images/logo.png" alt="Logo" className="h-40 w-40" />
         </Link>
-
-        <SignedOut>
-          <SignInOAuthButton />
-        </SignedOut>
 
         <SignedIn>
           <SignOutButton>
@@ -31,17 +34,7 @@ export const Navbar = () => {
         Discover The Shop!
       </Link>
 
-      <div className="flex items-center space-x-4">
-        <div className="relative">
-          <input
-            type="text"
-            placeholder="Search"
-            className="pl-8 pr-4 py-1 border rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-white"
-          />
-        </div>
-        <ShoppingCart className="text-white" />
-        <Heart className="text-white" />
-      </div>
+      {isSignedIn ? <ShoppingCart /> : <SignInOAuthButton />}
     </nav>
   );
 };

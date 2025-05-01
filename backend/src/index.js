@@ -8,6 +8,7 @@ import productRoutes from "./routes/product.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
 import authRoutes from "./routes/auth.routes.js";
 import reviewRoutes from "./routes/review.routes.js";
+import cartRoutes from "./routes/cart.routes.js";
 
 import cors from "cors";
 
@@ -24,6 +25,7 @@ app.use("/api/products", productRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/reviews", reviewRoutes);
+app.use("/api/cart", cartRoutes);
 
 app.use((error, req, res, next) => {
   res.status(500).json({

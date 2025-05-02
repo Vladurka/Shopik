@@ -3,6 +3,7 @@ import {
   SignedIn,
   SignOutButton,
   useAuth,
+  useUser,
 } from "@clerk/clerk-react";
 import { ShoppingCart } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -10,6 +11,7 @@ import { SignInOAuthButton } from "./SignInOAuthButton";
 
 export const Navbar = () => {
   const { isSignedIn } = useAuth();
+  const { user } = useUser();
 
   return (
     <nav className="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-6 bg-zinc-900 shadow-md h-25">
@@ -29,12 +31,18 @@ export const Navbar = () => {
 
       <Link
         to="/products"
-        className="font-bold text-xl text-white transform transition-transform duration-300 hover:scale-110 hover:text-blue-300 cursor-pointer"
+        className="font-bold text-xl text-white transform transition-transform duration-300 hover:scale-110 hover:text-blue-300 cursor-pointer mr-60"
       >
         Discover The Shop!
       </Link>
 
-      {isSignedIn ? <ShoppingCart /> : <SignInOAuthButton />}
+      {isSignedIn ? (
+        <Link to={`/cart/${user?.id}`}>
+          <ShoppingCart />
+        </Link>
+      ) : (
+        <SignInOAuthButton />
+      )}
     </nav>
   );
 };

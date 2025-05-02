@@ -4,6 +4,7 @@ import { ProductsPage } from "./pages/products-page/ProductsPage";
 import { AuthenticateWithRedirectCallback } from "@clerk/clerk-react";
 import { AuthCallbackPage } from "./pages/auth-callback-page/AuthCallbackPage";
 import { DetailsPage } from "./pages/details-page/DetailsPage";
+import { CartPage } from "./pages/cart-page/CartPage";
 
 export default function App() {
   return (
@@ -11,6 +12,7 @@ export default function App() {
       <Route path="/" element={<HomePage />} />
       <Route path="/products" element={<ProductsPage />} />
       <Route path="/product/:id" element={<DetailsPage />} />
+      <Route path="/cart/:id" element={<CartPage />}></Route>
       <Route
         path="/sso-callback"
         element={

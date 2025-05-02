@@ -117,7 +117,7 @@ export const DetailsPage = () => {
 
             <div className="mt-6">
               <h2 className="text-xl font-bold mb-2">Reviews</h2>
-              <ScrollArea className="bg-zinc-800 rounded-lg p-4 max-h-40">
+              <ScrollArea className="bg-zinc-800 rounded-lg p-4 h-28">
                 <div className="space-y-2">
                   {reviews && reviews.length > 0 ? (
                     reviews.map((review: ReviewOutput) => (
@@ -131,15 +131,15 @@ export const DetailsPage = () => {
                             alt="Profile"
                             className="w-8 h-8 rounded-full object-cover"
                           />
-                          <span className="font-bold">
+                          <span className="font-bold mt-0.5">
                             {review.sender.fullName}
                           </span>
                         </div>
-                        <p className="text-sm">{review.message}</p>
+                        <p className="text-sm text-white">{review.message}</p>
                       </div>
                     ))
                   ) : (
-                    <p className="text-center text-sm italic opacity-60 text-white">
+                    <p className="text-center text-white text-sm italic opacity-60">
                       No reviews yet
                     </p>
                   )}

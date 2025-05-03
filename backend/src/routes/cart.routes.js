@@ -11,7 +11,7 @@ import { protectRoute } from "../middleware/auth.middleware.js";
 
 const router = express.Router();
 
-//router.use(protectRoute);
+router.use(protectRoute);
 
 router.get("/isAdded/:id/:productId", isAdded);
 router.get("/:id", getCart);

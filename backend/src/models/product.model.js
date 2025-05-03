@@ -8,6 +8,7 @@ const productSchema = new mongoose.Schema({
   price: {
     type: Number,
     required: true,
+    min: 0,
   },
   imageUrl: {
     type: String,
@@ -48,6 +49,8 @@ const productSchema = new mongoose.Schema({
   rating: {
     type: Number,
     default: 0,
+    min: 0,
+    max: 5,
   },
   reviews: [
     {

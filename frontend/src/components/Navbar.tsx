@@ -1,10 +1,4 @@
-import {
-  SignedOut,
-  SignedIn,
-  SignOutButton,
-  useAuth,
-  useUser,
-} from "@clerk/clerk-react";
+import { SignedIn, SignOutButton, useAuth, useUser } from "@clerk/clerk-react";
 import { ShoppingCart } from "lucide-react";
 import { Link } from "react-router-dom";
 import { SignInOAuthButton } from "./SignInOAuthButton";

@@ -24,13 +24,12 @@ export const SignInOAuthButton = () => {
   };
 
   return (
-    <Button
+    <button
       onClick={signInWithGoogle}
       disabled={isSubmitting || !isLoaded}
-      variant="secondary"
       className="px-4 py-2 bg-zinc-500 text-white font-semibold rounded-lg hover:bg-zinc-600 transition-colors duration-300"
     >
-      {isSubmitting ? "Redirecting..." : "Continue with Google"}
-    </Button>
+      {isSubmitting ? "Redirecting..." : "Sign in"}
+    </button>
   );
 };

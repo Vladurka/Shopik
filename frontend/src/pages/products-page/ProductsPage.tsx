@@ -7,7 +7,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 
 export const ProductsPage = () => {
-  const { products, fetchProducts } = useProductStore();
+  const { products, fetchProducts, deleteProduct } = useProductStore();
   const [searchParams] = useSearchParams();
 
   useEffect(() => {
@@ -23,6 +23,11 @@ export const ProductsPage = () => {
 
     fetchProducts(queryParams);
   }, [fetchProducts, searchParams]);
+
+  const handleDeleteProduct = async (id: string) => {
+    await deleteProduct(id);
+    await fetchProducts();
+  };
 
   return (
     <>
@@ -56,6 +61,12 @@ export const ProductsPage = () => {
                 >
                   View Details
                 </Link>
+                <button
+                  className="inline-block bg-red-700 text-white py-2 px-4 rounded-md hover:bg-red-600 transition cursor-pointer mt-2"
+                  onClick={() => handleDeleteProduct(product._id)}
+                >
+                  Remove
+                </button>
               </div>
             </motion.div>
           ))}

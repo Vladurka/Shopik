@@ -12,11 +12,7 @@ const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY!);
 
 export const CartPage = () => {
   const { id } = useParams<{ id: string }>();
-  const getCart = useCartStore((state) => state.getCart);
-  const addToCart = useCartStore((state) => state.addItem);
-  const removeFromCart = useCartStore((state) => state.deleteItem);
-  const cart = useCartStore((state) => state.cart);
-  const isLoading = useCartStore((state) => state.isLoading);
+  const { getCart, addItem, deleteItem, cart, isLoading } = useCartStore();
 
   const [totalPrice, setTotalPrice] = useState(0);
   const [totalQuantity, setTotalQuantity] = useState(0);
@@ -43,13 +39,13 @@ export const CartPage = () => {
 
   const handleAdd = async (productId: string) => {
     if (!id) return;
-    await addToCart(id, productId);
+    await addItem(id, productId);
     await getCart(id);
   };
 
   const handleRemove = async (productId: string) => {
     if (!id) return;
-    await removeFromCart(id, productId);
+    await deleteItem(id, productId);
     await getCart(id);
   };
 

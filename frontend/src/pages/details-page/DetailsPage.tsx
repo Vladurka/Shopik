@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useProductStore } from "@/stores/useProductStore";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart } from "lucide-react";
+import { ShoppingCart, Trash2 } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { useAuth, useUser } from "@clerk/clerk-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -10,6 +10,7 @@ import { useReviewStore } from "@/stores/useReviewsStore";
 import { ReviewOutput } from "@/types";
 import { useCartStore } from "@/stores/useCartStore";
 import { motion } from "framer-motion";
+import { useAdminStore } from "@/stores/useAdminStore";
 
 export const DetailsPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -18,19 +19,19 @@ export const DetailsPage = () => {
   const { user } = useUser();
   const { isSignedIn } = useAuth();
 
-  const fetchProduct = useProductStore((state) => state.fetchProduct);
-  const currentProduct = useProductStore((state) => state.currentProduct);
-
-  const submitReview = useReviewStore((state) => state.addReview);
-
-  const addToCart = useCartStore((state) => state.addItem);
-  const checkItem = useCartStore((state) => state.checkItem);
-  const isAdded = useCartStore((state) => state.isAdded);
+  const { fetchProduct, currentProduct } = useProductStore();
+  const { addReview, deleteReview } = useReviewStore();
+  const { addItem, checkItem, isAdded } = useCartStore();
+  const { isAdmin, checkAdmin } = useAdminStore();
 
   useEffect(() => {
     if (id) fetchProduct(id);
     window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [id, fetchProduct]);
+    const checkIsAdmin = async () => {
+      await checkAdmin();
+    };
+    checkIsAdmin();
+  }, [id, fetchProduct, checkAdmin]);
 
   useEffect(() => {
     if (user?.id && currentProduct?._id) {
@@ -44,20 +45,25 @@ export const DetailsPage = () => {
 
   const handleAddToCart = async () => {
     if (!user) return;
-    await addToCart(user.id, currentProduct._id);
+    await addItem(user.id, currentProduct._id);
     await checkItem(user.id, currentProduct._id);
   };
 
   const handleAddReview = async () => {
     if (!user?.id || !currentProduct?._id || !message.trim()) return;
 
-    await submitReview({
+    await addReview({
       message,
       productId: currentProduct._id,
       senderId: user.id,
     });
 
     setMessage("");
+    await fetchProduct(currentProduct._id);
+  };
+
+  const handleDeleteReview = async (id: string) => {
+    await deleteReview(id);
     await fetchProduct(currentProduct._id);
   };
 
@@ -103,7 +109,7 @@ export const DetailsPage = () => {
             <ul className="mt-4 space-y-1">
               <li>
                 <strong>{quantity > 0 ? "In stock:" : "Out of stock!"}</strong>
-                {quantity > 0 && ` ${quantity}`}
+                {quantity > 0 && `${quantity}`}
               </li>
               {rating !== undefined && (
                 <li>
@@ -140,6 +146,13 @@ export const DetailsPage = () => {
                           />
                           <span className="font-bold mt-0.5">
                             {review.sender.fullName}
+                          </span>
+                          <span>
+                            {isAdmin && (
+                              <Trash2
+                                onClick={() => handleDeleteReview(review._id)}
+                              />
+                            )}
                           </span>
                         </div>
                         <p className="text-sm text-white">{review.message}</p>

@@ -5,6 +5,7 @@ import { create } from "zustand";
 export interface ReviewStore {
   error: string | null;
   addReview: (review: ReviewInput) => Promise<void>;
+  deleteReview: (id: string) => Promise<void>;
 }
 
 export const useReviewStore = create<ReviewStore>((set) => ({
@@ -21,6 +22,19 @@ export const useReviewStore = create<ReviewStore>((set) => ({
           error.response?.data?.message ||
           error.message ||
           "Failed to add review",
+      });
+    }
+  },
+
+  deleteReview: async (id: string) => {
+    try {
+      await axiosInstance.delete(`/admin/reviews/${id}`);
+    } catch (error: any) {
+      set({
+        error:
+          error.response?.data?.message ||
+          error.message ||
+          "Failed to delete review",
       });
     }
   },

@@ -5,10 +5,14 @@ import { Product } from "@/types";
 import { Filters } from "@/components/Filters";
 import { Link, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useAdminStore } from "@/stores/useAdminStore";
+import { Trash2 } from "lucide-react";
 
 export const ProductsPage = () => {
-  const { products, fetchProducts } = useProductStore();
+  const { products, fetchProducts, deleteProduct } = useProductStore();
   const [searchParams] = useSearchParams();
+
+  const { isAdmin, checkAdmin } = useAdminStore();
 
   useEffect(() => {
     const queryParams: Record<string, string[]> = {};
@@ -21,8 +25,18 @@ export const ProductsPage = () => {
       }
     });
 
+    const checkIsAdmin = async () => {
+      await checkAdmin();
+    };
+    checkIsAdmin();
+
     fetchProducts(queryParams);
-  }, [fetchProducts, searchParams]);
+  }, [fetchProducts, searchParams, checkAdmin]);
+
+  const handleDeleteProduct = async (id: string) => {
+    await deleteProduct(id);
+    await fetchProducts();
+  };
 
   return (
     <>
@@ -56,6 +70,11 @@ export const ProductsPage = () => {
                 >
                   View Details
                 </Link>
+                <span className="flex justify-center mt-4">
+                  {isAdmin && (
+                    <Trash2 onClick={() => handleDeleteProduct(product._id)} />
+                  )}
+                </span>
               </div>
             </motion.div>
           ))}

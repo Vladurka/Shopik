@@ -1,7 +1,7 @@
 import express from "express";
 import {
   createProduct,
-  updateProduct,
+  deleteReview,
   deleteProduct,
   checkAdmin,
 } from "../controllers/admin.controller.js";
@@ -15,7 +15,7 @@ router.use(requireAdmin);
 router.get("/", checkAdmin);
 
 router.post("/products", createProduct);
-router.get("/products/filters", deleteProduct);
-router.get("/products/:id", updateProduct);
+router.delete("/products/:id", deleteProduct);
+router.delete("/reviews/:id", deleteReview);
 
 export default router;

@@ -1,6 +1,7 @@
 import { stripe } from "../lib/stripe.js";
 import { Order } from "../models/order.model.js";
 import { User } from "../models/user.model.js";
+import { Product } from "../models/product.model.js";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -88,6 +89,12 @@ export const checkoutSuccess = async (req, res, next) => {
       price: session.amount_total / 100,
       stripeSessionId: session.id,
     });
+
+    for (let i = 0; i < products.length; i++) {
+      await Product.findByIdAndUpdate(products[i].id, {
+        $inc: { quantity: -products[i].quantity / 2 },
+      });
+    }
 
     return res.status(200).json({
       success: true,

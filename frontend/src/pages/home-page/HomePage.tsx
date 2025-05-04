@@ -1,4 +1,5 @@
 import { Navbar } from "@/components/Navbar";
+import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 
 export const HomePage = () => {
@@ -16,9 +17,12 @@ export const HomePage = () => {
       <Navbar />
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4 pt-28">
         {images.map((item, index) => (
-          <div
+          <motion.div
             key={index}
             className="relative w-full h-80 rounded overflow-hidden group"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
           >
             <img
               src={item.bg}
@@ -36,7 +40,7 @@ export const HomePage = () => {
                 {item.text}
               </Link>
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
     </>

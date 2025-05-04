@@ -29,6 +29,7 @@ export const DetailsPage = () => {
 
   useEffect(() => {
     if (id) fetchProduct(id);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }, [id, fetchProduct]);
 
   useEffect(() => {
@@ -83,7 +84,7 @@ export const DetailsPage = () => {
         <div className="max-w-5xl mx-auto bg-zinc-900 rounded-xl shadow-md overflow-hidden md:flex">
           <div className="md:flex-shrink-0">
             <img
-              className="h-96 w-full object-cover md:h-full md:w-96"
+              className="w-full h-150 object-contain rounded-md bg-zinc-950"
               src={imageUrl}
               alt={name}
             />

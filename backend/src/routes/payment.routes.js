@@ -8,7 +8,9 @@ import { protectRoute } from "../middleware/auth.middleware.js";
 
 const router = express.Router();
 
-router.post("/create-checkout-session", protectRoute, createCheckoutSession);
-router.post("/checkout-success", protectRoute, checkoutSuccess);
+router.use(protectRoute);
+
+router.post("/create-checkout-session", createCheckoutSession);
+router.post("/checkout-success", checkoutSuccess);
 
 export default router;

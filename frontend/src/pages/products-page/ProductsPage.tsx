@@ -48,7 +48,7 @@ export const ProductsPage = () => {
 
                 <Link
                   to={`/product/${product._id}`}
-                  className="inline-block bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition"
+                  className="inline-block bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition cursor-pointer"
                 >
                   View Details
                 </Link>

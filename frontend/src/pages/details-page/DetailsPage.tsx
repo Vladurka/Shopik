@@ -107,7 +107,7 @@ export const DetailsPage = () => {
             </ul>
 
             <Button
-              className="mt-4 w-1/2"
+              className="mt-4 w-1/2 cursor-pointer"
               disabled={quantity <= 0 || !isSignedIn || !user || isAdded}
               onClick={handleAddToCart}
             >
@@ -157,7 +157,7 @@ export const DetailsPage = () => {
                 />
                 <button
                   onClick={handleAddReview}
-                  className="mt-2 px-4 py-2 bg-zinc-600 rounded-lg text-white font-bold hover:bg-zinc-700"
+                  className="mt-2 px-4 py-2 bg-zinc-600 rounded-lg text-white font-bold hover:bg-zinc-700 cursor-pointer"
                 >
                   Send
                 </button>

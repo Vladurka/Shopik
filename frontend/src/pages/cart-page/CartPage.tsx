@@ -4,6 +4,10 @@ import { useCartStore } from "@/stores/useCartStore";
 import { CartItem } from "@/types";
 import { Navbar } from "@/components/Navbar";
 import { Minus, Plus, Loader2 } from "lucide-react";
+import { axiosInstance } from "@/lib/axios";
+import { loadStripe } from "@stripe/stripe-js";
+
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY!);
 
 export const CartPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -46,6 +50,20 @@ export const CartPage = () => {
     if (!id) return;
     await removeFromCart(id, productId);
     await getCart(id);
+  };
+
+  const handleCheckout = async () => {
+    const stripe = await stripePromise;
+    const res = await axiosInstance.post("/payments/create-checkout-session", {
+      products: cart?.items,
+      clerkId: id,
+    });
+    const session = res.data;
+    const result = await stripe?.redirectToCheckout({ sessionId: session.id });
+
+    if (result?.error) {
+      console.log(result.error.message);
+    }
   };
 
   if (!id) return null;
@@ -124,15 +142,16 @@ export const CartPage = () => {
             </div>
             <div className="flex justify-center gap-20">
               <Link to="/products">
-                <button className="px-6 py-3 bg-zinc-700 text-white font-semibold rounded-lg hover:bg-zinc-600 transition-colors duration-300">
+                <button className="px-6 py-3 bg-zinc-700 text-white font-semibold rounded-lg hover:bg-zinc-600 transition-colors duration-300 cursor-pointer">
                   Continue Shopping
                 </button>
               </Link>
-              <Link to="/checkout">
-                <button className="px-6 py-3 bg-zinc-700 text-white font-semibold rounded-lg hover:bg-zinc-600 transition-colors duration-300">
-                  Checkout
-                </button>
-              </Link>
+              <button
+                className="px-6 py-3 bg-zinc-700 text-white font-semibold rounded-lg hover:bg-zinc-600 transition-colors duration-300 cursor-pointer"
+                onClick={handleCheckout}
+              >
+                Checkout
+              </button>
             </div>
           </>
         ) : (
@@ -140,7 +159,7 @@ export const CartPage = () => {
             Your cart is empty 😔
             <div className="mt-4">
               <Link to="/products">
-                <button className="px-6 py-3 bg-zinc-700 text-white font-semibold rounded-lg hover:bg-zinc-600 transition-colors duration-300">
+                <button className="px-6 py-3 bg-zinc-700 text-white font-semibold rounded-lg hover:bg-zinc-600 transition-colors duration-300 cursor-pointer">
                   Back To The Shop
                 </button>
               </Link>

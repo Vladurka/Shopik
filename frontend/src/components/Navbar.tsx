@@ -2,13 +2,19 @@ import { SignedIn, SignOutButton, useAuth, useUser } from "@clerk/clerk-react";
 import { ShoppingCart } from "lucide-react";
 import { Link } from "react-router-dom";
 import { SignInOAuthButton } from "./SignInOAuthButton";
+import { motion } from "framer-motion";
 
 export const Navbar = () => {
   const { isSignedIn } = useAuth();
   const { user } = useUser();
 
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-6 bg-zinc-900 shadow-md h-25">
+    <motion.nav
+      className="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-6 bg-zinc-900 shadow-md h-25"
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+    >
       <div className="flex items-center">
         <Link to="/">
           <img src="/images/logo.png" alt="Logo" className="h-40 w-40" />
@@ -37,6 +43,6 @@ export const Navbar = () => {
       ) : (
         <SignInOAuthButton />
       )}
-    </nav>
+    </motion.nav>
   );
 };

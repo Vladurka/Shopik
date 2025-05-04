@@ -9,6 +9,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useReviewStore } from "@/stores/useReviewsStore";
 import { ReviewOutput } from "@/types";
 import { useCartStore } from "@/stores/useCartStore";
+import { motion } from "framer-motion";
 
 export const DetailsPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -73,7 +74,12 @@ export const DetailsPage = () => {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen py-40">
+      <motion.div
+        className="min-h-screen py-40"
+        initial={{ opacity: 0, y: -30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.9 }}
+      >
         <div className="max-w-5xl mx-auto bg-zinc-900 rounded-xl shadow-md overflow-hidden md:flex">
           <div className="md:flex-shrink-0">
             <img
@@ -165,7 +171,7 @@ export const DetailsPage = () => {
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
     </>
   );
 };

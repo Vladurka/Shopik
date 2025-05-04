@@ -4,6 +4,7 @@ import { useProductStore } from "@/stores/useProductStore";
 import { Product } from "@/types";
 import { Filters } from "@/components/Filters";
 import { Link, useSearchParams } from "react-router-dom";
+import { motion } from "framer-motion";
 
 export const ProductsPage = () => {
   const { products, fetchProducts } = useProductStore();
@@ -32,9 +33,12 @@ export const ProductsPage = () => {
         </div>
         <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           {products.map((product: Product) => (
-            <div
+            <motion.div
               key={product._id}
               className="border-2 rounded-lg shadow-md p-4 w-full flex flex-col items-center text-center"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.9 }}
             >
               <img
                 src={product.imageUrl}
@@ -53,7 +57,7 @@ export const ProductsPage = () => {
                   View Details
                 </Link>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>

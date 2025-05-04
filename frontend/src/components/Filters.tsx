@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useProductStore } from "@/stores/useProductStore";
 import { useSearchParams } from "react-router-dom";
+import { motion } from "framer-motion";
 
 export const Filters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -84,7 +85,12 @@ export const Filters = () => {
   };
 
   return (
-    <div className="p-4 border rounded-md shadow-md w-80 fixed">
+    <motion.div
+      className="p-4 border rounded-md shadow-md w-80 fixed"
+      initial={{ opacity: 0, y: -30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.9 }}
+    >
       <h2 className="text-2xl font-bold mb-4">Filters</h2>
 
       <button
@@ -126,6 +132,6 @@ export const Filters = () => {
           </div>
         )
       )}
-    </div>
+    </motion.div>
   );
 };

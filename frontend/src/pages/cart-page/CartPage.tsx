@@ -6,6 +6,7 @@ import { Navbar } from "@/components/Navbar";
 import { Minus, Plus, Loader2 } from "lucide-react";
 import { axiosInstance } from "@/lib/axios";
 import { loadStripe } from "@stripe/stripe-js";
+import { motion } from "framer-motion";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY!);
 
@@ -90,8 +91,11 @@ export const CartPage = () => {
           <>
             <div className="space-y-6">
               {cart.items.map((item: CartItem) => (
-                <div
+                <motion.div
                   key={item.product._id}
+                  initial={{ opacity: 0, y: -30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.9 }}
                   className="flex flex-col md:flex-row items-center gap-6 border border-zinc-700 rounded-xl p-4 bg-zinc-900 shadow-lg"
                 >
                   <img
@@ -132,14 +136,19 @@ export const CartPage = () => {
                       <Plus size={16} />
                     </button>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
 
-            <div className="flex flex-col md:flex-row justify-between items-center text-white text-xl font-bold pt-6 border-t border-zinc-700">
+            <motion.div
+              className="flex flex-col md:flex-row justify-between items-center text-white text-xl font-bold pt-6 border-t border-zinc-700"
+              initial={{ opacity: 0, y: -30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.9 }}
+            >
               <div>Total Items: {totalQuantity}</div>
               <div>Total Price: ${totalPrice.toFixed(2)}</div>
-            </div>
+            </motion.div>
             <div className="flex justify-center gap-20">
               <Link to="/products">
                 <button className="px-6 py-3 bg-zinc-700 text-white font-semibold rounded-lg hover:bg-zinc-600 transition-colors duration-300 cursor-pointer">

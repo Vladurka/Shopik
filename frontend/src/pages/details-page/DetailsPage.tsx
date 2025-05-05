@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useProductStore } from "@/stores/useProductStore";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, Trash, Trash2 } from "lucide-react";
+import { ShoppingCart, Trash2 } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { useAuth, useUser } from "@clerk/clerk-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -21,7 +21,7 @@ export const DetailsPage = () => {
 
   const { fetchProduct, currentProduct } = useProductStore();
   const { addReview, deleteReview } = useReviewStore();
-  const { addItem, checkItem, isAdded } = useCartStore();
+  const { addItem, checkItem, isAdded, setId } = useCartStore();
   const { checkAdmin, isAdmin } = useAdminStore();
 
   useEffect(() => {
@@ -32,18 +32,17 @@ export const DetailsPage = () => {
 
   useEffect(() => {
     if (user?.id && currentProduct?._id) {
-      checkItem(user.id, currentProduct._id);
+      setId(user.id);
+      checkItem(currentProduct._id);
     }
-  }, [user?.id, currentProduct?._id, checkItem]);
+  }, [user?.id, currentProduct?._id, checkItem, setId]);
 
   if (!currentProduct) {
     return <div className="p-4 text-center">Product not found.</div>;
   }
 
   const handleAddToCart = async () => {
-    if (!user) return;
-    await addItem(user.id, currentProduct._id);
-    await checkItem(user.id, currentProduct._id);
+    await addItem(currentProduct._id);
   };
 
   const handleAddReview = async () => {
@@ -121,7 +120,7 @@ export const DetailsPage = () => {
               disabled={quantity <= 0 || !isSignedIn || !user || isAdded}
               onClick={handleAddToCart}
             >
-              {isAdded ? "In The Cart" : "Add to cart"}{" "}
+              {isAdded ? "In The Cart" : "Add to cart"}
               <ShoppingCart className="ml-2" />
             </Button>
 

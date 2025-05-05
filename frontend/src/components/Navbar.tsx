@@ -1,4 +1,4 @@
-import { SignedIn, SignOutButton, useAuth, useUser } from "@clerk/clerk-react";
+import { SignedIn, SignOutButton, useAuth } from "@clerk/clerk-react";
 import { ShoppingCart } from "lucide-react";
 import { Link } from "react-router-dom";
 import { SignInOAuthButton } from "./SignInOAuthButton";
@@ -6,7 +6,6 @@ import { motion } from "framer-motion";
 
 export const Navbar = () => {
   const { isSignedIn } = useAuth();
-  const { user } = useUser();
 
   return (
     <motion.nav
@@ -37,7 +36,7 @@ export const Navbar = () => {
       </Link>
 
       {isSignedIn ? (
-        <Link to={`/cart/${user?.id}`}>
+        <Link to={"/cart"}>
           <ShoppingCart />
         </Link>
       ) : (

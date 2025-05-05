@@ -6,21 +6,27 @@ export interface CartStore {
   error: string | null;
   isAdded: boolean;
   isLoading: boolean;
-  getCart: (id: string) => Promise<void>;
-  checkItem: (id: string, productId: string) => Promise<void>;
-  addItem: (id: string, productId: string) => Promise<void>;
-  deleteItem: (id: string, productId: string) => Promise<void>;
-  clearCart: (id: string) => Promise<void>;
+  id: string;
+  setId: (id: string) => void;
+  getCart: () => Promise<void>;
+  checkItem: (productId: string) => Promise<void>;
+  addItem: (productId: string) => Promise<void>;
+  deleteItem: (productId: string) => Promise<void>;
+  clearCart: () => Promise<void>;
 }
 
-export const useCartStore = create<CartStore>((set) => ({
+export const useCartStore = create<CartStore>((set, get) => ({
   cart: null,
   error: null,
   isAdded: false,
   isLoading: false,
+  id: "",
 
-  getCart: async (id: string) => {
+  setId: (id: string) => set({ id }),
+
+  getCart: async () => {
     set({ isLoading: true, error: null });
+    const id = get().id;
     try {
       const { data } = await axiosInstance.get(`/cart/${id}`);
       set({
@@ -37,7 +43,8 @@ export const useCartStore = create<CartStore>((set) => ({
     }
   },
 
-  checkItem: async (id: string, productId: string) => {
+  checkItem: async (productId: string) => {
+    const id = get().id;
     set({ isLoading: true, error: null });
     try {
       const { data } = await axiosInstance.get(
@@ -51,13 +58,15 @@ export const useCartStore = create<CartStore>((set) => ({
     }
   },
 
-  addItem: async (id: string, productId: string) => {
+  addItem: async (productId: string) => {
+    const id = get().id;
     set({ isLoading: true, error: null });
     try {
       await axiosInstance.post("/cart", {
         id: id,
         productId: productId,
       });
+      set({ isAdded: true });
     } catch (error: any) {
       set({ error: error.message });
     } finally {
@@ -65,7 +74,8 @@ export const useCartStore = create<CartStore>((set) => ({
     }
   },
 
-  deleteItem: async (id: string, productId: string) => {
+  deleteItem: async (productId: string) => {
+    const id = get().id;
     set({ isLoading: true, error: null });
     try {
       const { data } = await axiosInstance.patch("/cart", {
@@ -80,7 +90,8 @@ export const useCartStore = create<CartStore>((set) => ({
     }
   },
 
-  clearCart: async (id: string) => {
+  clearCart: async () => {
+    const id = get().id;
     set({ isLoading: true, error: null });
     try {
       const { data } = await axiosInstance.delete(`/cart/${id}`);

@@ -5,17 +5,14 @@ import { motion } from "framer-motion";
 
 export const Filters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-
-  const filters = useProductStore((state) => state.filters);
-  const selectedFilters = useProductStore((state) => state.selectedFilters);
-  const fetchFilters = useProductStore((state) => state.fetchFilters);
-  const fetchProducts = useProductStore((state) => state.fetchProducts);
-  const setSelectedFilters = useProductStore(
-    (state) => state.setSelectedFilters
-  );
-  const resetSelectedFilters = useProductStore(
-    (state) => state.resetSelectedFilters
-  );
+  const {
+    setSelectedFilters,
+    fetchFilters,
+    fetchProducts,
+    selectedFilters,
+    resetSelectedFilters,
+    filters,
+  } = useProductStore();
 
   useEffect(() => {
     const paramsObj = Array.from(searchParams.entries()).reduce(

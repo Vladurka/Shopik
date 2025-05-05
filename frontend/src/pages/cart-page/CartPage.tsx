@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useUser } from "@clerk/clerk-react";
 import { useCartStore } from "@/stores/useCartStore";
 import { CartItem } from "@/types";
 import { Navbar } from "@/components/Navbar";
@@ -11,15 +12,18 @@ import { motion } from "framer-motion";
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY!);
 
 export const CartPage = () => {
-  const { id } = useParams<{ id: string }>();
-  const { getCart, addItem, deleteItem, cart, isLoading } = useCartStore();
+  const { getCart, addItem, deleteItem, cart, isLoading, setId } =
+    useCartStore();
 
   const [totalPrice, setTotalPrice] = useState(0);
   const [totalQuantity, setTotalQuantity] = useState(0);
 
+  const { user } = useUser();
+
   useEffect(() => {
-    if (id) getCart(id);
-  }, [id, getCart]);
+    if (user?.id) setId(user?.id);
+    getCart();
+  }, [user, getCart, setId]);
 
   useEffect(() => {
     if (cart?.items?.length) {
@@ -38,22 +42,20 @@ export const CartPage = () => {
   }, [cart]);
 
   const handleAdd = async (productId: string) => {
-    if (!id) return;
-    await addItem(id, productId);
-    await getCart(id);
+    await addItem(productId);
+    await getCart();
   };
 
   const handleRemove = async (productId: string) => {
-    if (!id) return;
-    await deleteItem(id, productId);
-    await getCart(id);
+    await deleteItem(productId);
+    await getCart();
   };
 
   const handleCheckout = async () => {
     const stripe = await stripePromise;
     const res = await axiosInstance.post("/payments/create-checkout-session", {
       products: cart?.items,
-      clerkId: id,
+      clerkId: user?.id,
     });
     const session = res.data;
     const result = await stripe?.redirectToCheckout({ sessionId: session.id });
@@ -62,8 +64,6 @@ export const CartPage = () => {
       console.log(result.error.message);
     }
   };
-
-  if (!id) return null;
 
   if (isLoading) {
     return (
@@ -74,7 +74,7 @@ export const CartPage = () => {
   }
 
   if (!cart) {
-    return null;
+    return;
   }
 
   return (

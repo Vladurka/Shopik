@@ -13,7 +13,7 @@ export default function App() {
       <Route path="/" element={<HomePage />} />
       <Route path="/products" element={<ProductsPage />} />
       <Route path="/product/:id" element={<DetailsPage />} />
-      <Route path="/cart/:id" element={<CartPage />}></Route>
+      <Route path="/cart" element={<CartPage />}></Route>
       <Route path="/success" element={<SuccessPage />} />
       <Route
         path="/sso-callback"

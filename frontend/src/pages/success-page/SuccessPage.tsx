@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useUser } from "@clerk/clerk-react";
 import { useCartStore } from "@/stores/useCartStore";
 import { CheckCircle } from "lucide-react";
@@ -10,14 +10,13 @@ import Confetti from "react-confetti";
 export const SuccessPage = () => {
   const [searchParams] = useSearchParams();
   const sessionId = searchParams.get("session_id");
-  const clearCart = useCartStore((state) => state.clearCart);
+  const { clearCart, setId } = useCartStore();
   const { user } = useUser();
 
   const [orderId, setOrderId] = useState<string | null>(null);
-  const executedRef = useRef(false);
 
   useEffect(() => {
-    if (!user || !sessionId || executedRef.current) return;
+    if (!user || !sessionId) return;
 
     const handleCheckoutSuccess = async () => {
       try {
@@ -25,15 +24,16 @@ export const SuccessPage = () => {
           sessionId,
         });
         setOrderId(result.data.order);
-        await clearCart(user.id);
-        executedRef.current = true;
+
+        setId(user.id);
+        await clearCart();
       } catch (error) {
         console.error("Checkout success error:", error);
       }
     };
 
     handleCheckoutSuccess();
-  }, [user, clearCart, sessionId]);
+  }, [user, clearCart, sessionId, setId]);
 
   return (
     <>

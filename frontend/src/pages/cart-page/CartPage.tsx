@@ -5,15 +5,20 @@ import { useCartStore } from "@/stores/useCartStore";
 import { CartItem } from "@/types";
 import { Navbar } from "@/components/Navbar";
 import { Minus, Plus, Loader2 } from "lucide-react";
-import { axiosInstance } from "@/lib/axios";
-import { loadStripe } from "@stripe/stripe-js";
 import { motion } from "framer-motion";
 
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY!);
-
 export const CartPage = () => {
-  const { getCart, addItem, deleteItem, cart, isLoading, setId } =
-    useCartStore();
+  const {
+    getCart,
+    addItem,
+    deleteItem,
+    cart,
+    isLoading,
+    total,
+    quantity,
+    setId,
+    checkOut,
+  } = useCartStore();
 
   const [totalPrice, setTotalPrice] = useState(0);
   const [totalQuantity, setTotalQuantity] = useState(0);
@@ -27,42 +32,22 @@ export const CartPage = () => {
 
   useEffect(() => {
     if (cart?.items?.length) {
-      const price = cart.items.reduce(
-        (acc, item) => acc + item.product.price * item.quantity,
-        0
-      );
-      const quantity = cart.items.reduce((acc, item) => acc + item.quantity, 0);
-
-      setTotalPrice(price);
+      setTotalPrice(total);
       setTotalQuantity(quantity);
     } else {
       setTotalPrice(0);
       setTotalQuantity(0);
     }
-  }, [cart]);
+  }, [cart, total, quantity]);
 
   const handleAdd = async (productId: string) => {
     await addItem(productId);
-    await getCart();
+    getCart();
   };
 
   const handleRemove = async (productId: string) => {
     await deleteItem(productId);
-    await getCart();
-  };
-
-  const handleCheckout = async () => {
-    const stripe = await stripePromise;
-    const res = await axiosInstance.post("/payments/create-checkout-session", {
-      products: cart?.items,
-      clerkId: user?.id,
-    });
-    const session = res.data;
-    const result = await stripe?.redirectToCheckout({ sessionId: session.id });
-
-    if (result?.error) {
-      console.log(result.error.message);
-    }
+    getCart();
   };
 
   if (isLoading) {
@@ -73,9 +58,7 @@ export const CartPage = () => {
     );
   }
 
-  if (!cart) {
-    return;
-  }
+  if (!cart) return;
 
   return (
     <>
@@ -153,7 +136,7 @@ export const CartPage = () => {
               </Link>
               <button
                 className="px-6 py-3 bg-zinc-700 text-white font-semibold rounded-lg hover:bg-zinc-600 transition-colors duration-300 cursor-pointer"
-                onClick={handleCheckout}
+                onClick={checkOut}
               >
                 Checkout
               </button>

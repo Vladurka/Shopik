@@ -1,18 +1,24 @@
 import { create } from "zustand";
 import { axiosInstance } from "@/lib/axios";
 import { Cart } from "@/types";
+import { loadStripe } from "@stripe/stripe-js";
 export interface CartStore {
   cart: Cart | null;
   error: string | null;
   isAdded: boolean;
   isLoading: boolean;
   id: string;
+  total: number;
+  quantity: number;
+  orderId: string;
   setId: (id: string) => void;
   getCart: () => Promise<void>;
   checkItem: (productId: string) => Promise<void>;
   addItem: (productId: string) => Promise<void>;
   deleteItem: (productId: string) => Promise<void>;
   clearCart: () => Promise<void>;
+  checkOut: () => Promise<void>;
+  checkOutSucceed: (sessionId: string) => Promise<void>;
 }
 
 export const useCartStore = create<CartStore>((set, get) => ({
@@ -21,6 +27,9 @@ export const useCartStore = create<CartStore>((set, get) => ({
   isAdded: false,
   isLoading: false,
   id: "",
+  total: 0,
+  quantity: 0,
+  orderId: "",
 
   setId: (id: string) => set({ id }),
 
@@ -34,7 +43,14 @@ export const useCartStore = create<CartStore>((set, get) => ({
           id,
           items: data.cart,
         },
-        error: null,
+        total: data.cart.reduce(
+          (acc: any, item: any) => acc + item.product.price * item.quantity,
+          0
+        ),
+        quantity: data.cart.reduce(
+          (acc: any, item: any) => acc + item.quantity,
+          0
+        ),
       });
     } catch (error: any) {
       set({ error: error.message });
@@ -100,6 +116,36 @@ export const useCartStore = create<CartStore>((set, get) => ({
       set({ error: error.message });
     } finally {
       set({ isLoading: false });
+    }
+  },
+  checkOut: async () => {
+    const stripePromise = loadStripe(
+      import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY!
+    );
+
+    const { cart, id } = get();
+
+    const stripe = await stripePromise;
+    const res = await axiosInstance.post("/payments/create-checkout-session", {
+      products: cart?.items,
+      clerkId: id,
+    });
+    const session = res.data;
+    const result = await stripe?.redirectToCheckout({ sessionId: session.id });
+
+    if (result?.error) {
+      console.log(result.error.message);
+    }
+  },
+
+  checkOutSucceed: async (sessionId: string) => {
+    try {
+      const result = await axiosInstance.post("/payments/checkout-success", {
+        sessionId,
+      });
+      set({ orderId: result.data.order });
+    } catch (error: any) {
+      set({ error: error.message });
     }
   },
 }));

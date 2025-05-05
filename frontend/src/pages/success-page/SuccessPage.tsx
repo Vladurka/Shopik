@@ -1,39 +1,29 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useUser } from "@clerk/clerk-react";
 import { useCartStore } from "@/stores/useCartStore";
 import { CheckCircle } from "lucide-react";
 import { motion } from "framer-motion";
 import { useSearchParams } from "react-router-dom";
-import { axiosInstance } from "@/lib/axios";
 import Confetti from "react-confetti";
 
 export const SuccessPage = () => {
   const [searchParams] = useSearchParams();
   const sessionId = searchParams.get("session_id");
-  const { clearCart, setId } = useCartStore();
+  const { clearCart, setId, checkOutSucceed, orderId } = useCartStore();
   const { user } = useUser();
-
-  const [orderId, setOrderId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!user || !sessionId) return;
 
     const handleCheckoutSuccess = async () => {
-      try {
-        const result = await axiosInstance.post("/payments/checkout-success", {
-          sessionId,
-        });
-        setOrderId(result.data.order);
+      checkOutSucceed(sessionId);
 
-        setId(user.id);
-        await clearCart();
-      } catch (error) {
-        console.error("Checkout success error:", error);
-      }
+      setId(user.id);
+      clearCart();
     };
 
     handleCheckoutSuccess();
-  }, [user, clearCart, sessionId, setId]);
+  }, [user, clearCart, sessionId, setId, checkOutSucceed]);
 
   return (
     <>

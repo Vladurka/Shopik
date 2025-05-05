@@ -41,9 +41,7 @@ export const DetailsPage = () => {
     return <div className="p-4 text-center">Product not found.</div>;
   }
 
-  const handleAddToCart = async () => {
-    await addItem(currentProduct._id);
-  };
+  const handleAddToCart = async () => addItem(currentProduct._id);
 
   const handleAddReview = async () => {
     if (!user?.id || !currentProduct?._id || !message.trim()) return;
@@ -55,12 +53,12 @@ export const DetailsPage = () => {
     });
 
     setMessage("");
-    await fetchProduct(currentProduct._id);
+    fetchProduct(currentProduct._id);
   };
 
   const handleDeleteReview = async (id: string) => {
     await deleteReview(id);
-    await fetchProduct(currentProduct._id);
+    fetchProduct(currentProduct._id);
   };
 
   const {

@@ -26,7 +26,7 @@ export const ProductsPage = () => {
 
   const handleDeleteProduct = async (id: string) => {
     await deleteProduct(id);
-    await fetchProducts();
+    fetchProducts();
   };
 
   return (

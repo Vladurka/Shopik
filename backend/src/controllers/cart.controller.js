@@ -1,9 +1,12 @@
 import { redis } from "../lib/redis.js";
 import { Product } from "../models/product.model.js";
+import { cartSchema } from "../validation/validation.js";
+import { handleValidationError } from "../utils/handleValidationError.js";
 
-export const addToCart = async (req, res) => {
+export const addToCart = async (req, res, next) => {
   try {
-    const { id, productId } = req.body;
+    const parsed = cartSchema.parse(req.body);
+    const { id, productId } = parsed;
     const quantity = 1;
 
     const product = await Product.findById(productId).lean();
@@ -29,11 +32,12 @@ export const addToCart = async (req, res) => {
     await redis.set(cartKey, JSON.stringify(cart));
     res.status(200).json({ message: "Product added to cart", cart });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    const result = handleValidationError(error, res);
+    if (!result) next(error);
   }
 };
 
-export const isAdded = async (req, res) => {
+export const isAdded = async (req, res, next) => {
   try {
     const { id, productId } = req.params;
     const cartKey = `cart:${id}`;
@@ -50,11 +54,11 @@ export const isAdded = async (req, res) => {
 
     return res.status(200).json({ isAdded: exists });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };
 
-export const getCart = async (req, res) => {
+export const getCart = async (req, res, next) => {
   try {
     const { id } = req.params;
     const cartKey = `cart:${id}`;
@@ -63,13 +67,14 @@ export const getCart = async (req, res) => {
     const cart = cartRaw ? JSON.parse(cartRaw) : [];
     res.status(200).json({ cart });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };
 
-export const removeFromCart = async (req, res) => {
+export const removeFromCart = async (req, res, next) => {
   try {
-    const { id, productId } = req.body;
+    const parsed = cartSchema.parse(req.body);
+    const { id, productId } = parsed;
     const cartKey = `cart:${id}`;
     const cartRaw = await redis.get(cartKey);
 
@@ -95,16 +100,17 @@ export const removeFromCart = async (req, res) => {
     await redis.set(cartKey, JSON.stringify(cart));
     res.status(200).json({ message: "Product updated", cart });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    const result = handleValidationError(error, res);
+    if (!result) next(error);
   }
 };
 
-export const clearCart = async (req, res) => {
+export const clearCart = async (req, res, next) => {
   try {
     const { id } = req.params;
     await redis.del(`cart:${id}`);
     res.status(200).json({ message: "Cart cleared" });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };

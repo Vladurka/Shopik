@@ -5,10 +5,12 @@ import { Product } from "@/types";
 import { Filters } from "@/components/Filters";
 import { Link, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useAdminStore } from "@/stores/useAdminStore";
 
 export const ProductsPage = () => {
   const { products, fetchProducts, deleteProduct } = useProductStore();
   const [searchParams] = useSearchParams();
+  const { checkAdmin, isAdmin } = useAdminStore();
 
   useEffect(() => {
     const queryParams: Record<string, string[]> = {};
@@ -21,8 +23,9 @@ export const ProductsPage = () => {
       }
     });
 
+    checkAdmin();
     fetchProducts(queryParams);
-  }, [fetchProducts, searchParams]);
+  }, [fetchProducts, searchParams, checkAdmin]);
 
   const handleDeleteProduct = async (id: string) => {
     await deleteProduct(id);
@@ -61,12 +64,15 @@ export const ProductsPage = () => {
                 >
                   View Details
                 </Link>
-                <button
-                  className="inline-block bg-red-700 text-white py-2 px-4 rounded-md hover:bg-red-600 transition cursor-pointer mt-2"
-                  onClick={() => handleDeleteProduct(product._id)}
-                >
-                  Remove
-                </button>
+
+                {isAdmin && (
+                  <button
+                    className="inline-block bg-red-700 text-white py-2 px-4 rounded-md hover:bg-red-600 transition cursor-pointer mt-2"
+                    onClick={() => handleDeleteProduct(product._id)}
+                  >
+                    Remove
+                  </button>
+                )}
               </div>
             </motion.div>
           ))}

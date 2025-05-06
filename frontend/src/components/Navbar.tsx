@@ -43,14 +43,14 @@ export const Navbar = () => {
       </Link>
       {isSignedIn ? (
         <div className="flex items-center gap-10">
-          <Link to={"/dashboard"}>
-            {isAdmin && (
+          {isAdmin && (
+            <Link to={"/dashboard"}>
               <button className="flex items-center gap-3 px-4 py-2 bg-zinc-500 text-white font-semibold rounded-lg hover:bg-zinc-600 transition-colors duration-300 cursor-pointer">
                 Dashboard
                 <LayoutDashboard />
               </button>
-            )}
-          </Link>
+            </Link>
+          )}
           <Link to={"/cart"}>
             <ShoppingCart />
           </Link>

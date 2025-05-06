@@ -1,8 +1,11 @@
 import { User } from "../models/user.model.js";
+import { handleValidationError } from "../utils/handleValidationError.js";
+import { userSchema } from "../validation/validation.js";
 
 export const authCallback = async (req, res, next) => {
   try {
-    const { id, firstName, lastName, imageUrl } = req.body;
+    const parsed = userSchema.parse(req.body);
+    const { id, firstName, lastName, imageUrl } = parsed;
 
     const existingUser = await User.findOne({ clerkId: id });
 
@@ -21,6 +24,7 @@ export const authCallback = async (req, res, next) => {
 
     res.status(201).json({ success: true });
   } catch (error) {
-    next(error);
+    const result = handleValidationError(error, res);
+    if (!result) next(error);
   }
 };

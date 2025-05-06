@@ -65,6 +65,15 @@ export const createCheckoutSession = async (req, res, next) => {
 export const checkoutSuccess = async (req, res, next) => {
   try {
     const { sessionId } = req.body;
+
+    if (
+      !sessionId ||
+      typeof sessionId !== "string" ||
+      sessionId.trim() === ""
+    ) {
+      return res.status(400).json({ message: "Invalid or missing sessionId" });
+    }
+
     const session = await stripe.checkout.sessions.retrieve(sessionId);
 
     if (session.payment_status !== "paid") {

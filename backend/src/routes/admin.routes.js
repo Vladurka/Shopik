@@ -7,11 +7,11 @@ import {
   deleteReview,
 } from "../controllers/admin.controller.js";
 
-import { requireAdmin } from "../middleware/auth.middleware.js";
+import { protectRoute, requireAdmin } from "../middleware/auth.middleware.js";
 
 const router = express.Router();
 
-// router.use(requireAdmin);
+router.use(protectRoute, requireAdmin);
 
 router.delete("/reviews/:id", deleteReview);
 router.delete("/products/:id", deleteProduct);

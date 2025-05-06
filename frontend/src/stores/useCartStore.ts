@@ -3,6 +3,7 @@ import { axiosInstance } from "@/lib/axios";
 import { Cart } from "@/types";
 import { loadStripe } from "@stripe/stripe-js";
 import { toast } from "react-hot-toast";
+
 export interface CartStore {
   cart: Cart | null;
   error: string | null;
@@ -126,26 +127,40 @@ export const useCartStore = create<CartStore>((set, get) => ({
     }
   },
   checkOut: async () => {
-    const stripePromise = loadStripe(
-      import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY!
-    );
+    set({ isLoading: true, error: null });
+    try {
+      const stripePromise = loadStripe(
+        import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY!
+      );
 
-    const { cart, id } = get();
+      const { cart, id } = get();
 
-    const stripe = await stripePromise;
-    const res = await axiosInstance.post("/payments/create-checkout-session", {
-      products: cart?.items,
-      clerkId: id,
-    });
-    const session = res.data;
-    const result = await stripe?.redirectToCheckout({ sessionId: session.id });
+      const stripe = await stripePromise;
+      const res = await axiosInstance.post(
+        "/payments/create-checkout-session",
+        {
+          products: cart?.items,
+          clerkId: id,
+        }
+      );
+      const session = res.data;
+      const result = await stripe?.redirectToCheckout({
+        sessionId: session.id,
+      });
 
-    if (result?.error) {
-      console.log(result.error.message);
+      if (result?.error) {
+        console.log(result.error.message);
+      }
+    } catch (error: any) {
+      set({ error: error.message });
+      toast.error("Failed to checkout. Check the quantity of items");
+    } finally {
+      set({ isLoading: false });
     }
   },
 
   checkOutSucceed: async (sessionId: string) => {
+    set({ isLoading: true, error: null });
     try {
       const result = await axiosInstance.post("/payments/checkout-success", {
         sessionId,
@@ -153,6 +168,8 @@ export const useCartStore = create<CartStore>((set, get) => ({
       set({ orderId: result.data.order });
     } catch (error: any) {
       set({ error: error.message });
+    } finally {
+      set({ isLoading: false });
     }
   },
 }));

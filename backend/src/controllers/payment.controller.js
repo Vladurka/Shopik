@@ -2,6 +2,7 @@ import { stripe } from "../lib/stripe.js";
 import { Order } from "../models/order.model.js";
 import { User } from "../models/user.model.js";
 import { Product } from "../models/product.model.js";
+import { checkQuantity } from "../controllers/product.controller.js";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -15,18 +16,26 @@ export const createCheckoutSession = async (req, res, next) => {
     }
 
     let totalAmount = 0;
+    const lineItems = [];
 
-    const lineItems = products.map((item) => {
+    for (const item of products) {
       const unitAmount = Math.round(item.product.price * 100);
       const quantity = item.quantity;
 
+      const isEnough = await checkQuantity(item.product._id, quantity);
+      if (!isEnough) {
+        return res.status(400).json({ message: "Not enough quantity" });
+      }
+
       if (isNaN(unitAmount) || isNaN(quantity)) {
-        throw new Error("Invalid price or quantity in product");
+        return res
+          .status(400)
+          .json({ message: "Invalid price or quantity in product" });
       }
 
       totalAmount += unitAmount * quantity;
 
-      return {
+      lineItems.push({
         price_data: {
           currency: "usd",
           product_data: {
@@ -36,8 +45,8 @@ export const createCheckoutSession = async (req, res, next) => {
           unit_amount: unitAmount,
         },
         quantity,
-      };
-    });
+      });
+    }
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
@@ -101,7 +110,7 @@ export const checkoutSuccess = async (req, res, next) => {
 
     for (let i = 0; i < products.length; i++) {
       await Product.findByIdAndUpdate(products[i].id, {
-        $inc: { quantity: -products[i].quantity / 2 },
+        $inc: { quantity: -products[i].quantity },
       });
     }
 

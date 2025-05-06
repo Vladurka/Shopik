@@ -18,6 +18,7 @@ export const CartPage = () => {
     quantity,
     setId,
     checkOut,
+    clearCart,
   } = useCartStore();
 
   const [totalPrice, setTotalPrice] = useState(0);
@@ -47,6 +48,11 @@ export const CartPage = () => {
 
   const handleRemove = async (productId: string) => {
     await deleteItem(productId);
+    getCart();
+  };
+
+  const handleClearCart = async () => {
+    await clearCart();
     getCart();
   };
 
@@ -139,6 +145,13 @@ export const CartPage = () => {
                 onClick={checkOut}
               >
                 Checkout
+              </button>
+
+              <button
+                className="px-6 py-3 bg-zinc-700 text-white font-semibold rounded-lg hover:bg-zinc-600 transition-colors duration-300 cursor-pointer"
+                onClick={handleClearCart}
+              >
+                Clear the cart
               </button>
             </div>
           </>

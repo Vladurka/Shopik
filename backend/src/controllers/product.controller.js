@@ -60,3 +60,8 @@ export const getProductFilters = async (req, res, next) => {
     next(error);
   }
 };
+
+export const checkQuantity = async (productId, quantity) => {
+  const product = await Product.findById(productId).lean();
+  return product.quantity >= quantity;
+};

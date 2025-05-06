@@ -13,6 +13,7 @@ export interface ProductStore {
   error: string | null;
   fetchProducts: (filtersParams?: FilterParams) => Promise<void>;
   fetchProduct: (id: string) => Promise<void>;
+  addProduct: (formData: FormData) => Promise<void>;
   deleteProduct: (id: string) => Promise<void>;
   fetchFilters: (filtersParams?: FilterParams) => Promise<void>;
   setSelectedFilters: (filters: Partial<Filters>) => void;
@@ -58,6 +59,19 @@ export const useProductStore = create<ProductStore>((set) => ({
     try {
       const { data } = await axiosInstance.get(`/products/${id}`);
       set({ currentProduct: data });
+    } catch (error: any) {
+      set({ error: error.message });
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+
+  addProduct: async (formData: FormData) => {
+    set({ isLoading: true, error: null });
+    try {
+      await axiosInstance.post("/admin/products", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
     } catch (error: any) {
       set({ error: error.message });
     } finally {

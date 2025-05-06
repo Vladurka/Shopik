@@ -1,5 +1,4 @@
 import { useSignIn } from "@clerk/clerk-react";
-import { Button } from "./ui/button.tsx";
 import { useState } from "react";
 
 export const SignInOAuthButton = () => {
@@ -18,7 +17,7 @@ export const SignInOAuthButton = () => {
         redirectUrlComplete: "/auth-callback",
       });
     } catch (error) {
-      console.error("Error in sign in with google", error);
+      console.error("Error in sign in", error);
       setIsSubmitting(false);
     }
   };

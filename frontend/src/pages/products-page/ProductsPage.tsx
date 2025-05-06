@@ -40,7 +40,7 @@ export const ProductsPage = () => {
           {products.map((product: Product) => (
             <motion.div
               key={product._id}
-              className="border-2 rounded-lg shadow-md p-4 w-full flex flex-col items-center text-center"
+              className="bg-gradient-to-b from-zinc-700 to-black border border-zinc-700 rounded-lg shadow-lg p-4 w-full flex flex-col items-center text-center hover:shadow-xl transition"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.9 }}

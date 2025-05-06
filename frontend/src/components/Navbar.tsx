@@ -1,11 +1,18 @@
 import { SignedIn, SignOutButton, useAuth } from "@clerk/clerk-react";
-import { ShoppingCart } from "lucide-react";
+import { LayoutDashboard, ShoppingCart } from "lucide-react";
 import { Link } from "react-router-dom";
 import { SignInOAuthButton } from "./SignInOAuthButton";
 import { motion } from "framer-motion";
+import { useAdminStore } from "@/stores/useAdminStore";
+import { useEffect } from "react";
 
 export const Navbar = () => {
   const { isSignedIn } = useAuth();
+  const { isAdmin, checkAdmin } = useAdminStore();
+
+  useEffect(() => {
+    checkAdmin();
+  }, [checkAdmin]);
 
   return (
     <motion.nav
@@ -21,7 +28,7 @@ export const Navbar = () => {
 
         <SignedIn>
           <SignOutButton>
-            <button className="px-4 py-2 bg-zinc-500 text-white font-semibold rounded-lg hover:bg-zinc-600 transition-colors duration-300">
+            <button className="px-4 py-2 bg-zinc-500 text-white font-semibold rounded-lg hover:bg-zinc-600 transition-colors duration-300 cursor-pointer">
               Sign out
             </button>
           </SignOutButton>
@@ -30,15 +37,24 @@ export const Navbar = () => {
 
       <Link
         to="/products"
-        className="font-bold text-xl text-white transform transition-transform duration-300 hover:scale-110 hover:text-blue-300 cursor-pointer mr-60"
+        className="absolute left-1/2 transform -translate-x-1/2 font-bold text-xl text-white transition-transform duration-300 hover:scale-110 hover:text-blue-300 cursor-pointer"
       >
         Discover The Shop!
       </Link>
-
       {isSignedIn ? (
-        <Link to={"/cart"}>
-          <ShoppingCart />
-        </Link>
+        <div className="flex items-center gap-10">
+          <Link to={"/dashboard"}>
+            {isAdmin && (
+              <button className="flex items-center gap-3 px-4 py-2 bg-zinc-500 text-white font-semibold rounded-lg hover:bg-zinc-600 transition-colors duration-300 cursor-pointer">
+                Dashboard
+                <LayoutDashboard />
+              </button>
+            )}
+          </Link>
+          <Link to={"/cart"}>
+            <ShoppingCart />
+          </Link>
+        </div>
       ) : (
         <SignInOAuthButton />
       )}

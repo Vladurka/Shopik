@@ -6,11 +6,13 @@ import { AuthCallbackPage } from "./pages/auth-callback-page/AuthCallbackPage";
 import { DetailsPage } from "./pages/details-page/DetailsPage";
 import { CartPage } from "./pages/cart-page/CartPage";
 import { SuccessPage } from "./pages/success-page/SuccessPage";
-import DashboardPage from "./pages/dashboard-page/DashboardPage ";
+import { Toaster } from "react-hot-toast";
+import { DashboardPage } from "./pages/dashboard-page/DashboardPage";
 
 export default function App() {
   return (
     <>
+      <Toaster position="bottom-center" />
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/products" element={<ProductsPage />} />

@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { axiosInstance } from "@/lib/axios";
 import { Cart } from "@/types";
 import { loadStripe } from "@stripe/stripe-js";
+import { toast } from "react-hot-toast";
 export interface CartStore {
   cart: Cart | null;
   error: string | null;
@@ -83,8 +84,10 @@ export const useCartStore = create<CartStore>((set, get) => ({
         productId: productId,
       });
       set({ isAdded: true });
+      toast.success("Item added to cart");
     } catch (error: any) {
       set({ error: error.message });
+      toast.error("Failed to add item to cart");
     } finally {
       set({ isLoading: false });
     }
@@ -99,8 +102,10 @@ export const useCartStore = create<CartStore>((set, get) => ({
         productId: productId,
       });
       set({ cart: data.cart, error: null });
+      toast.success("Item removed from cart");
     } catch (error: any) {
       set({ error: error.message });
+      toast.error("Failed to remove item from cart");
     } finally {
       set({ isLoading: false });
     }
@@ -112,8 +117,10 @@ export const useCartStore = create<CartStore>((set, get) => ({
     try {
       const { data } = await axiosInstance.delete(`/cart/${id}`);
       set({ cart: data.cart, error: null });
+      toast.success("Cart cleared");
     } catch (error: any) {
       set({ error: error.message });
+      toast.error("Failed to clear cart");
     } finally {
       set({ isLoading: false });
     }

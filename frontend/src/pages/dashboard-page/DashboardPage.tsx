@@ -14,7 +14,7 @@ import { Navbar } from "@/components/Navbar";
 import { motion } from "framer-motion";
 import { Loader, Trash2 } from "lucide-react";
 
-const DashboardPage = () => {
+export const DashboardPage = () => {
   const {
     getAnalytics,
     users,
@@ -151,8 +151,6 @@ const DashboardPage = () => {
     </>
   );
 };
-
-export default DashboardPage;
 
 const Card = ({ label, value }: { label: string; value: number | string }) => (
   <div className="bg-zinc-800 rounded-xl p-6 text-center shadow-md hover:shadow-xl transition">

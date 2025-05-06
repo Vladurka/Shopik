@@ -1,6 +1,7 @@
 import { Product, Filters } from "@/types";
 import { axiosInstance } from "@/lib/axios";
 import { create } from "zustand";
+import { toast } from "react-hot-toast";
 
 export type FilterParams = Record<string, string | string[]>;
 
@@ -72,8 +73,10 @@ export const useProductStore = create<ProductStore>((set) => ({
       await axiosInstance.post("/admin/products", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
+      toast.success("Product added successfully");
     } catch (error: any) {
       set({ error: error.message });
+      toast.error("Failed to add product");
     } finally {
       set({ isLoading: false });
     }
@@ -83,8 +86,10 @@ export const useProductStore = create<ProductStore>((set) => ({
     set({ isLoading: true, error: null });
     try {
       await axiosInstance.delete(`/admin/products/${id}`);
+      toast.success("Product deleted successfully");
     } catch (error: any) {
       set({ error: error.message });
+      toast.error("Failed to delete product");
     } finally {
       set({ isLoading: false });
     }

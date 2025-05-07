@@ -16,6 +16,7 @@ export interface ProductStore {
   fetchProduct: (id: string) => Promise<void>;
   addProduct: (formData: FormData) => Promise<void>;
   deleteProduct: (id: string) => Promise<void>;
+  setQuantity: (id: string, quantity: number) => Promise<void>;
   fetchFilters: (filtersParams?: FilterParams) => Promise<void>;
   setSelectedFilters: (filters: Partial<Filters>) => void;
   resetSelectedFilters: () => void;
@@ -67,7 +68,7 @@ export const useProductStore = create<ProductStore>((set) => ({
     }
   },
 
-  addProduct: async (formData: FormData) => {
+  addProduct: async (formData) => {
     set({ isLoading: true, error: null });
     try {
       await axiosInstance.post("/admin/products", formData, {
@@ -90,6 +91,22 @@ export const useProductStore = create<ProductStore>((set) => ({
     } catch (error: any) {
       set({ error: error.message });
       toast.error("Failed to delete product");
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+
+  setQuantity: async (id, quantity) => {
+    set({ isLoading: true, error: null });
+    try {
+      await axiosInstance.patch(`/admin/products/setQuantity`, {
+        id: id,
+        quantity: quantity,
+      });
+      toast.success("Quantity updated successfully");
+    } catch (error: any) {
+      set({ error: error.message });
+      toast.error("Failed to update quantity");
     } finally {
       set({ isLoading: false });
     }

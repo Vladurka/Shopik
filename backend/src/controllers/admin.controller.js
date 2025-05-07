@@ -58,6 +58,16 @@ export const deleteReview = async (req, res, next) => {
   }
 };
 
+export const setQuantity = async (req, res, next) => {
+  try {
+    const { id, quantity } = req.body;
+    await Product.findByIdAndUpdate(id, { quantity });
+    res.status(200).json({ succeed: true });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const checkAdmin = async (req, res) => {
   res.status(200).json({ isAdmin: true });
 };

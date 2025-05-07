@@ -5,6 +5,7 @@ import {
   deleteProduct,
   checkAdmin,
   deleteReview,
+  setQuantity,
 } from "../controllers/admin.controller.js";
 
 import { protectRoute, requireAdmin } from "../middleware/auth.middleware.js";
@@ -17,6 +18,9 @@ router.delete("/reviews/:id", deleteReview);
 router.delete("/products/:id", deleteProduct);
 
 router.get("/", checkAdmin);
+
 router.post("/products", upload.single("file"), uploadProductsFromExcel);
+
+router.patch("/products/setQuantity", setQuantity);
 
 export default router;

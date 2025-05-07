@@ -14,21 +14,31 @@ import { useAdminStore } from "@/stores/useAdminStore";
 
 export const DetailsPage = () => {
   const { id } = useParams<{ id: string }>();
+
   const [message, setMessage] = useState("");
+  const [inStock, setInStock] = useState(1);
 
   const { user } = useUser();
   const { isSignedIn } = useAuth();
 
-  const { fetchProduct, currentProduct } = useProductStore();
+  const { fetchProduct, currentProduct, setQuantity } = useProductStore();
   const { addReview, deleteReview } = useReviewStore();
   const { addItem, checkItem, isAdded, setId } = useCartStore();
   const { checkAdmin, isAdmin } = useAdminStore();
 
   useEffect(() => {
-    if (id) fetchProduct(id);
-    checkAdmin();
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    if (id) {
+      fetchProduct(id);
+      checkAdmin();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
   }, [id, fetchProduct, checkAdmin]);
+
+  useEffect(() => {
+    if (currentProduct?.quantity !== undefined) {
+      setInStock(currentProduct.quantity);
+    }
+  }, [currentProduct?.quantity]);
 
   useEffect(() => {
     if (user?.id && currentProduct?._id) {
@@ -56,21 +66,13 @@ export const DetailsPage = () => {
     fetchProduct(currentProduct._id);
   };
 
-  const handleDeleteReview = async (id: string) => {
-    await deleteReview(id);
+  const handleDeleteReview = async (reviewId: string) => {
+    await deleteReview(reviewId);
     fetchProduct(currentProduct._id);
   };
 
-  const {
-    name,
-    price,
-    imageUrl,
-    description,
-    brand,
-    quantity,
-    rating,
-    reviews,
-  } = currentProduct;
+  const { name, price, imageUrl, description, brand, quantity, reviews } =
+    currentProduct;
 
   return (
     <>
@@ -101,16 +103,29 @@ export const DetailsPage = () => {
             <div className="mt-4 text-2xl font-semibold">${price}</div>
 
             <ul className="mt-4 space-y-1">
-              <li>
+              <li className="flex items-center gap-2">
                 <strong>{quantity > 0 ? "In stock:" : "Out of stock!"}</strong>
-                {quantity > 0 && ` ${quantity}`}
+                {isAdmin ? (
+                  <>
+                    <input
+                      type="number"
+                      min={0}
+                      value={inStock}
+                      onChange={(e) => setInStock(Number(e.target.value))}
+                      className="w-20 p-1 border rounded bg-zinc-800 text-white"
+                    />
+                    <Button
+                      onClick={() => setQuantity(currentProduct._id, inStock)}
+                      disabled={inStock < 0}
+                      className="ml-2 bg-white hover:bg-zinc-300 cursor-pointer"
+                    >
+                      Update
+                    </Button>
+                  </>
+                ) : (
+                  quantity > 0 && ` ${quantity}`
+                )}
               </li>
-              {rating !== undefined && (
-                <li>
-                  <strong>Rating: </strong>
-                  {rating}
-                </li>
-              )}
             </ul>
 
             <Button
@@ -144,6 +159,7 @@ export const DetailsPage = () => {
                           <span>
                             {isAdmin && (
                               <Trash2
+                                className="cursor-pointer"
                                 onClick={() => handleDeleteReview(review._id)}
                               />
                             )}

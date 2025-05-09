@@ -30,7 +30,7 @@ export const useReviewStore = create<ReviewStore>((set) => ({
   deleteReview: async (id: string) => {
     set({ error: null });
     try {
-      await axiosInstance.delete(`admin/reviews/${id}`);
+      await axiosInstance.delete(`/reviews/${id}`);
       toast.success("Review deleted successfully");
     } catch (error: any) {
       set({

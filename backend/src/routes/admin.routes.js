@@ -4,7 +4,6 @@ import {
   uploadProductsFromExcel,
   deleteProduct,
   checkAdmin,
-  deleteReview,
   setQuantity,
 } from "../controllers/admin.controller.js";
 
@@ -14,7 +13,6 @@ const router = express.Router();
 
 router.use(protectRoute, requireAdmin);
 
-router.delete("/reviews/:id", deleteReview);
 router.delete("/products/:id", deleteProduct);
 
 router.get("/", checkAdmin);

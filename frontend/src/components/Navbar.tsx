@@ -66,7 +66,7 @@ export const Navbar = () => {
       </div>
 
       {isMobileMenuOpen && (
-        <div className="md:hidden mt-4 flex flex-col gap-4 bg-zinc-800 p-4 rounded-lg text-white">
+        <div className="md:hidden mt-4 flex flex-col gap-4 bg-zinc-800 p-4 rounded-lg text-center text-white">
           {isSignedIn ? (
             <>
               {isAdmin && (

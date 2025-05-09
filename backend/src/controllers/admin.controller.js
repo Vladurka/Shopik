@@ -48,16 +48,6 @@ export const deleteProduct = async (req, res, next) => {
   }
 };
 
-export const deleteReview = async (req, res, next) => {
-  try {
-    const { id } = req.params;
-    await Review.findByIdAndDelete(id);
-    res.status(200).json({ succeed: true });
-  } catch (error) {
-    next(error);
-  }
-};
-
 export const setQuantity = async (req, res, next) => {
   try {
     const { id, quantity } = req.body;

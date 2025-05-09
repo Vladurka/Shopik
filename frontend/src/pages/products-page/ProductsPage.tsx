@@ -43,7 +43,7 @@ export const ProductsPage = () => {
         <ResizablePanelGroup direction="horizontal" className="w-full h-full">
           <ResizablePanel
             defaultSize={25}
-            minSize={15}
+            minSize={25}
             maxSize={35}
             className="p-2"
           >

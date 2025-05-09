@@ -156,7 +156,8 @@ export const DetailsPage = () => {
                             {review.sender.fullName}
                           </span>
                           <span>
-                            {isAdmin && (
+                            {(isAdmin ||
+                              user?.id === review.sender.clerkId) && (
                               <Trash2
                                 className="cursor-pointer"
                                 onClick={() => handleDeleteReview(review._id)}

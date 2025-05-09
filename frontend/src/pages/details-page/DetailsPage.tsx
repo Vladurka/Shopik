@@ -24,15 +24,14 @@ export const DetailsPage = () => {
   const { fetchProduct, currentProduct, setQuantity } = useProductStore();
   const { addReview, deleteReview } = useReviewStore();
   const { addItem, checkItem, isAdded, setId } = useCartStore();
-  const { checkAdmin, isAdmin } = useAdminStore();
+  const { isAdmin } = useAdminStore();
 
   useEffect(() => {
     if (id) {
       fetchProduct(id);
-      checkAdmin();
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
-  }, [id, fetchProduct, checkAdmin]);
+  }, [id, fetchProduct]);
 
   useEffect(() => {
     if (currentProduct?.quantity !== undefined) {

@@ -10,7 +10,7 @@ import { useAdminStore } from "@/stores/useAdminStore";
 export const ProductsPage = () => {
   const { products, fetchProducts, deleteProduct } = useProductStore();
   const [searchParams] = useSearchParams();
-  const { checkAdmin, isAdmin } = useAdminStore();
+  const { isAdmin } = useAdminStore();
 
   useEffect(() => {
     const queryParams: Record<string, string[]> = {};
@@ -23,9 +23,8 @@ export const ProductsPage = () => {
       }
     });
 
-    checkAdmin();
     fetchProducts(queryParams);
-  }, [fetchProducts, searchParams, checkAdmin]);
+  }, [fetchProducts, searchParams]);
 
   const handleDeleteProduct = async (id: string) => {
     await deleteProduct(id);

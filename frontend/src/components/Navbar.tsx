@@ -4,15 +4,10 @@ import { Link } from "react-router-dom";
 import { SignInOAuthButton } from "./SignInOAuthButton";
 import { motion } from "framer-motion";
 import { useAdminStore } from "@/stores/useAdminStore";
-import { useEffect } from "react";
 
 export const Navbar = () => {
   const { isSignedIn } = useAuth();
-  const { isAdmin, checkAdmin } = useAdminStore();
-
-  useEffect(() => {
-    checkAdmin();
-  }, [checkAdmin]);
+  const { isAdmin } = useAdminStore();
 
   return (
     <motion.nav

@@ -56,7 +56,7 @@ export const Filters = () => {
     if (newFilters.categories.length)
       queryParams.category = newFilters.categories;
 
-    setSelectedFilters({ [type]: updatedValues });
+    setSelectedFilters({ ...selectedFilters, [type]: updatedValues });
     fetchProducts(queryParams);
     fetchFilters(queryParams);
 
@@ -83,10 +83,10 @@ export const Filters = () => {
 
   return (
     <motion.div
-      className="p-4 border rounded-md shadow-md w-80 fixed"
-      initial={{ opacity: 0, y: -30 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.9 }}
+      className="p-4 border-r border-zinc-700 h-full overflow-y-auto scrollbar-hidden"
+      initial={{ opacity: 0, x: -20 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.5 }}
     >
       <h2 className="text-2xl font-bold mb-4">Filters</h2>
 
@@ -106,12 +106,12 @@ export const Filters = () => {
               {filterType}
             </h3>
             <div className="flex flex-wrap gap-2">
-              {(filters as any)[filterType].map((item: string) => (
-                <label key={item} className="flex items-center gap-2">
+              {(filters as any)[filterType]?.map((item: string) => (
+                <label key={item} className="flex items-center gap-2 text-sm">
                   <input
                     type="checkbox"
                     value={item}
-                    checked={(selectedFilters as any)[filterType].includes(
+                    checked={(selectedFilters as any)[filterType]?.includes(
                       item
                     )}
                     onChange={() =>

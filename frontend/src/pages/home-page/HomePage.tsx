@@ -32,14 +32,13 @@ export const HomePage = () => {
 
             <div className="absolute inset-0 bg-black/60"></div>
 
-            <div className="absolute inset-0 flex items-center justify-center">
-              <Link
-                to={`/products?tag=${item.text.replace(/\s+/g, "")}`}
-                className="text-white text-2xl font-bold transform transition-transform duration-300 group-hover:scale-110"
-              >
-                {item.text}
-              </Link>
-            </div>
+            <Link to={`/products?tag=${item.text.replace(/\s+/g, "")}`}>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="text-white text-2xl font-bold transform transition-transform duration-300 group-hover:scale-110">
+                  {item.text}
+                </span>
+              </div>
+            </Link>
           </motion.div>
         ))}
       </div>

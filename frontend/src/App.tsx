@@ -8,6 +8,7 @@ import { CartPage } from "./pages/cart-page/CartPage";
 import { SuccessPage } from "./pages/success-page/SuccessPage";
 import { Toaster } from "react-hot-toast";
 import { DashboardPage } from "./pages/dashboard-page/DashboardPage";
+import { OrdersHistoryPage } from "./pages/history-page/OrdersHistoryPage";
 
 export default function App() {
   return (
@@ -20,6 +21,7 @@ export default function App() {
         <Route path="/cart" element={<CartPage />}></Route>
         <Route path="/success" element={<SuccessPage />} />
         <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/history" element={<OrdersHistoryPage />} />
         <Route
           path="/sso-callback"
           element={

@@ -51,3 +51,12 @@ export interface Cart {
   id: string;
   items: CartItem[];
 }
+
+export interface Order {
+  _id: string;
+  user: string;
+  products: CartItem;
+  price: string;
+  stripeSessionId: string;
+  createdAt: string;
+}

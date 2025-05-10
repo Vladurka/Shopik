@@ -88,7 +88,7 @@ const seedDatabase = async () => {
         rating: 4.7,
       },
       {
-        name: "Adidas Originals Women's 3-Stripes Leggings",
+        name: "Adidas Originals Women's ",
         price: 40,
         imageUrl:
           "https://img01.ztat.net/article/spp-media-p1/8f57f1c9df2a497da095102dd99ea8f9/f81f9f57d879418bbd3c9d632f83660d.jpg?imwidth=1800",

@@ -1,5 +1,11 @@
 import { SignOutButton, useAuth, UserButton } from "@clerk/clerk-react";
-import { LayoutDashboard, Menu, ShoppingCart, X } from "lucide-react";
+import {
+  HistoryIcon,
+  LayoutDashboard,
+  Menu,
+  ShoppingCart,
+  X,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 import { SignInOAuthButton } from "./SignInOAuthButton";
 import { motion } from "framer-motion";
@@ -51,6 +57,9 @@ export const Navbar = () => {
               <Link to="/cart">
                 <ShoppingCart />
               </Link>
+              <Link to={"/history"}>
+                <HistoryIcon />
+              </Link>
             </>
           ) : (
             <SignInOAuthButton />
@@ -79,6 +88,9 @@ export const Navbar = () => {
               )}
               <Link to="/cart" onClick={() => setIsMobileMenuOpen(false)}>
                 Cart
+              </Link>
+              <Link to="/history" onClick={() => setIsMobileMenuOpen(false)}>
+                History
               </Link>
               <SignOutButton />
             </>

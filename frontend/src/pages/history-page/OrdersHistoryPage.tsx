@@ -40,7 +40,7 @@ export const OrdersHistoryPage = () => {
                 >
                   <div className="text-center mb-5">
                     <p className="text-sm text-gray-400 mb-4">
-                      Placed on
+                      Placed on &nbsp;
                       <span className="text-gray-300 font-medium">
                         {format(
                           new Date(order.createdAt),

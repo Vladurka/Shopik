@@ -3,12 +3,30 @@ import { buildProductQuery } from "../utils/productQueryBuilder.js";
 
 export const getProducts = async (req, res, next) => {
   try {
-    const { filter, sortOption, skip, limit } = buildProductQuery(req.query);
+    const { filter, searchRegex } = buildProductQuery(req.query);
 
-    const products = await Product.find(filter)
-      .sort(sortOption)
-      .skip(skip)
-      .limit(limit);
+    let products;
+
+    if (searchRegex) {
+      products = await Product.find({
+        ...filter,
+        $or: [
+          { name: searchRegex },
+          { brand: searchRegex },
+          { category: searchRegex },
+          { gender: searchRegex },
+          { color: searchRegex },
+        ],
+      }).lean();
+
+      products.sort((a, b) => {
+        const aMatch = searchRegex.test(a.name);
+        const bMatch = searchRegex.test(b.name);
+        return bMatch - aMatch;
+      });
+    } else {
+      products = await Product.find(filter);
+    }
 
     res.status(200).json({ products });
   } catch (error) {

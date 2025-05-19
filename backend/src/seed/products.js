@@ -16,7 +16,8 @@ const seedDatabase = async () => {
         price: 150,
         imageUrl:
           "https://img01.ztat.net/article/spp-media-p1/49de00d062493d6abe74dcd3853d42f5/c97d9d3cf917411dafee5debcd54dc2f.jpg?imwidth=1800&filter=packshot",
-        description: "Comfortable and stylish running shoes.",
+        description:
+          "Comfortable and stylish running shoes. Highly recommended.",
         category: "Footwear",
         brand: "Nike",
         color: "Black",

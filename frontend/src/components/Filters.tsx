@@ -15,15 +15,14 @@ export const Filters = () => {
   } = useProductStore();
 
   useEffect(() => {
-    const paramsObj = Array.from(searchParams.entries()).reduce(
-      (acc, [key, value]) => {
-        acc[key] = acc[key] ? [...acc[key], value] : [value];
-        return acc;
-      },
-      {} as Record<string, string[]>
-    );
+    const paramsObj: Record<string, string[]> = {};
 
-    const selectedFilters = {
+    for (const [key, value] of searchParams.entries()) {
+      if (!paramsObj[key]) paramsObj[key] = [];
+      paramsObj[key].push(value);
+    }
+
+    const selected = {
       genders: paramsObj.gender || [],
       sizes: paramsObj.size || [],
       colors: paramsObj.color || [],
@@ -31,47 +30,40 @@ export const Filters = () => {
       categories: paramsObj.category || [],
     };
 
-    setSelectedFilters(selectedFilters);
+    setSelectedFilters(selected);
     fetchProducts(paramsObj);
     fetchFilters(paramsObj);
-  }, [fetchFilters, fetchProducts, setSelectedFilters, searchParams]);
+  }, [searchParams, setSelectedFilters, fetchProducts, fetchFilters]);
 
   const handleFilterChange = (
     type: keyof typeof selectedFilters,
     value: string
   ) => {
-    const alreadySelected = selectedFilters[type].includes(value);
-    const updatedValues = alreadySelected
+    const isSelected = selectedFilters[type].includes(value);
+    const updated = isSelected
       ? selectedFilters[type].filter((v) => v !== value)
       : [...selectedFilters[type], value];
 
-    const newFilters = { ...selectedFilters, [type]: updatedValues };
+    const updatedFilters = { ...selectedFilters, [type]: updated };
+    setSelectedFilters(updatedFilters);
 
-    const queryParams: Record<string, string[]> = {};
+    const queryParams: Record<string, string[]> = {
+      ...(updatedFilters.genders.length && { gender: updatedFilters.genders }),
+      ...(updatedFilters.sizes.length && { size: updatedFilters.sizes }),
+      ...(updatedFilters.colors.length && { color: updatedFilters.colors }),
+      ...(updatedFilters.brands.length && { brand: updatedFilters.brands }),
+      ...(updatedFilters.categories.length && {
+        category: updatedFilters.categories,
+      }),
+    };
 
-    if (newFilters.genders.length) queryParams.gender = newFilters.genders;
-    if (newFilters.sizes.length) queryParams.size = newFilters.sizes;
-    if (newFilters.colors.length) queryParams.color = newFilters.colors;
-    if (newFilters.brands.length) queryParams.brand = newFilters.brands;
-    if (newFilters.categories.length)
-      queryParams.category = newFilters.categories;
-
-    setSelectedFilters({ ...selectedFilters, [type]: updatedValues });
     fetchProducts(queryParams);
     fetchFilters(queryParams);
 
-    const newSearchParams = new URLSearchParams(searchParams);
-
-    ["gender", "size", "color", "brand", "category"].forEach((key) => {
-      newSearchParams.delete(key);
-    });
-
-    Object.entries(queryParams).forEach(([key, values]) => {
-      values.forEach((value) => {
-        newSearchParams.append(key, value);
-      });
-    });
-
+    const newSearchParams = new URLSearchParams();
+    Object.entries(queryParams).forEach(([key, values]) =>
+      values.forEach((val) => newSearchParams.append(key, val))
+    );
     setSearchParams(newSearchParams);
   };
 
@@ -99,36 +91,36 @@ export const Filters = () => {
 
       <hr className="mb-4" />
 
-      {["genders", "sizes", "colors", "brands", "categories"].map(
-        (filterType) => (
-          <div key={filterType} className="mb-6">
-            <h3 className="text-lg font-semibold mb-2 capitalize">
-              {filterType}
-            </h3>
-            <div className="flex flex-wrap gap-2">
-              {(filters as any)[filterType]?.map((item: string) => (
-                <label key={item} className="flex items-center gap-2 text-sm">
-                  <input
-                    type="checkbox"
-                    value={item}
-                    checked={(selectedFilters as any)[filterType]?.includes(
+      {Object.entries({
+        genders: "Gender",
+        sizes: "Size",
+        colors: "Color",
+        brands: "Brand",
+        categories: "Category",
+      }).map(([key, label]) => (
+        <div key={key} className="mb-6">
+          <h3 className="text-lg font-semibold mb-2">{label}</h3>
+          <div className="flex flex-wrap gap-2">
+            {(filters as any)[key]?.map((item: string) => (
+              <label key={item} className="flex items-center gap-2 text-sm">
+                <input
+                  type="checkbox"
+                  value={item}
+                  checked={(selectedFilters as any)[key]?.includes(item)}
+                  onChange={() =>
+                    handleFilterChange(
+                      key as keyof typeof selectedFilters,
                       item
-                    )}
-                    onChange={() =>
-                      handleFilterChange(
-                        filterType as keyof typeof selectedFilters,
-                        item
-                      )
-                    }
-                  />
-                  {item}
-                </label>
-              ))}
-            </div>
-            <hr className="mt-4" />
+                    )
+                  }
+                />
+                {item}
+              </label>
+            ))}
           </div>
-        )
-      )}
+          <hr className="mt-4" />
+        </div>
+      ))}
     </motion.div>
   );
 };

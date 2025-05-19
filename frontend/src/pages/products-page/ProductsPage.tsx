@@ -69,8 +69,13 @@ export const ProductsPage = () => {
                       className="w-70 h-70 rounded-md"
                     />
                     <div className="flex flex-col w-full pt-4">
-                      <h2 className="text-xl font-bold mb-2">{product.name}</h2>
-                      <p className="text-white mb-2">{product.description}</p>
+                      <h2 className="text-xl font-bold mb-2 min-h-[60px]">
+                        {product.name}
+                      </h2>
+                      <p className="text-white mb-2">
+                        {product.description.split(" ").slice(0, 10).join(" ") +
+                          "…"}
+                      </p>
                       <p className="text-lg font-semibold mb-2">
                         ${product.price}
                       </p>

@@ -11,11 +11,29 @@ import { SignInOAuthButton } from "./SignInOAuthButton";
 import { motion } from "framer-motion";
 import { useAdminStore } from "@/stores/useAdminStore";
 import { useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export const Navbar = () => {
   const { isSignedIn } = useAuth();
   const { isAdmin } = useAdminStore();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const params = new URLSearchParams(location.search);
+
+    if (search) {
+      params.set("search", search);
+    } else {
+      params.delete("search");
+    }
+
+    navigate(`/products?${params.toString()}`);
+  };
 
   return (
     <motion.nav
@@ -54,6 +72,15 @@ export const Navbar = () => {
                   </button>
                 </Link>
               )}
+              <form className="my-4" onSubmit={handleSearch}>
+                <input
+                  type="text"
+                  placeholder="Search"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="border border-zinc-600 rounded-lg px-4 py-2 w-full"
+                />
+              </form>
               <Link to="/cart">
                 <ShoppingCart />
               </Link>

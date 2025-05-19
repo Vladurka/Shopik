@@ -114,13 +114,20 @@ export const useProductStore = create<ProductStore>((set) => ({
 
   fetchFilters: async (filtersParams) => {
     try {
-      const query = filtersParams
-        ? `?${new URLSearchParams(
-            Object.entries(filtersParams).flatMap(([key, value]) =>
-              Array.isArray(value) ? value.map((v) => [key, v]) : [[key, value]]
-            )
-          ).toString()}`
-        : "";
+      let query = "";
+
+      if (filtersParams) {
+        const params = new URLSearchParams();
+
+        for (const [key, value] of Object.entries(filtersParams)) {
+          if (Array.isArray(value)) {
+            value.forEach((v) => params.append(key, v));
+          } else {
+            params.append(key, value);
+          }
+        }
+        query = `?${params.toString()}`;
+      }
 
       const { data } = await axiosInstance.get(`/products/filters${query}`);
       set({ filters: data.filters });

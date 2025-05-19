@@ -72,7 +72,7 @@ export const Navbar = () => {
                   </button>
                 </Link>
               )}
-              <form className="my-4" onSubmit={handleSearch}>
+              <form className="my-4 hidden lg:block" onSubmit={handleSearch}>
                 <input
                   type="text"
                   placeholder="Search"

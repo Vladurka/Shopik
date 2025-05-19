@@ -1,5 +1,6 @@
 import { Product } from "../models/product.model.js";
 import { buildProductQuery } from "../utils/productQueryBuilder.js";
+import mongoose from "mongoose";
 
 export const getProducts = async (req, res, next) => {
   try {
@@ -35,8 +36,12 @@ export const getProducts = async (req, res, next) => {
 };
 
 export const getProductById = async (req, res, next) => {
+  const { id } = req.params;
   try {
-    const product = await Product.findById(req.params.id).populate({
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+    const product = await Product.findById(id).populate({
       path: "reviews",
       options: { sort: { createdAt: -1 } },
       populate: {

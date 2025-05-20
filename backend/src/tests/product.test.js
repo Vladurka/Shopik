@@ -20,10 +20,16 @@ describe("Product API", () => {
   });
 
   describe("GET /products/:id", () => {
+    let productId;
+
+    beforeAll(async () => {
+      const response = await request(app).get("/api/products");
+      const products = response.body.products;
+      productId = products[0]._id;
+    });
+
     it("should return a single product", async () => {
-      const response = await request(app).get(
-        "/api/products/682aff43f079b4a5479e8a08"
-      );
+      const response = await request(app).get(`/api/products/${productId}`);
       expect(response.status).toBe(200);
       expect(typeof response.body).toBe("object");
     });
